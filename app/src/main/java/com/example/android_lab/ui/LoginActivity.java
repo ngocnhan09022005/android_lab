@@ -6,14 +6,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.android_lab.R;
+import com.example.android_lab.models.User;
 
 public class LoginActivity extends AppCompatActivity {
     private Button btnBack, btnLogin;
     private EditText emailEdit, passwordEdit;
+    private User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,10 +34,10 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = emailEdit.getText().toString().trim();
-                String password = passwordEdit.getText().toString().trim();
+                user.setEmail(emailEdit.getText().toString().trim());
+                user.setPassword(passwordEdit.getText().toString().trim());
 
-                checkLogin(email, password);
+                checkLogin(user.getEmail(), user.getPassword());
             }
         });
     }
