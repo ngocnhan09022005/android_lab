@@ -17,8 +17,6 @@ public class HomeFragment extends Fragment {
     }
 
     private void initViews(View view) {
-        // Khởi tạo các view nếu cần
-        // TextView textView = view.findViewById(R.id.textView);
     }
 
     @Override

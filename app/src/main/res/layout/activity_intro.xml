@@ -8,15 +8,49 @@
     tools:context=".ui.IntroActivity"
     >
 
-    <Button
-        android:id="@+id/btnGetStarted"
-        android:layout_width="119dp"
-        android:layout_height="64dp"
-        android:layout_marginBottom="180dp"
-        android:text="Get started"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="match_parent"
+                android:layout_height="303dp"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/top_background1" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="40dp"
+                android:text="\t \t \t \t Get Started"
+                android:textColor="#673AB7"
+                android:textSize="40sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:clickable="true"
+                android:contentDescription="Tiếp tục"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:text="Get Started"
+                android:textColor="#673AB7"
+                android:textSize="40sp"
+                android:textStyle="bold"
+                app:srcCompat="@drawable/btn_arraw1" />
+
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
