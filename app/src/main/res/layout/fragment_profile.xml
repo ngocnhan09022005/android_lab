@@ -59,4 +59,13 @@
         android:text="Chỉnh sửa thông tin"
         android:background="@drawable/button_background"
         android:textColor="@color/white"/>
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Đăng xuất"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_background"
+        android:textColor="@color/white"/>
+
 </LinearLayout>

@@ -12,24 +12,28 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Android_lab"
         tools:targetApi="31">
+
+        <!-- Màn hình khởi động chính -->
         <activity
-            android:name=".ui.Register"
+            android:name=".ui.MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Intro chỉ mở khi cần -->
+        <activity
+            android:name=".ui.IntroActivity"
             android:exported="false" />
+
         <activity
             android:name=".ui.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.Register"
             android:exported="false" />
-        <activity
-            android:name=".ui.IntroActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

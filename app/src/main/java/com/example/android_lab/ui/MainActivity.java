@@ -1,61 +1,79 @@
 package com.example.android_lab.ui;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+
 import com.example.android_lab.R;
 import com.example.android_lab.ui.fragment.FavoritesFragment;
 import com.example.android_lab.ui.fragment.HomeFragment;
 import com.example.android_lab.ui.fragment.ProfileFragment;
 import com.example.android_lab.ui.fragment.SearchFragment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Menu items
     private LinearLayout menuHome, menuSearch, menuFavorites, menuProfile;
     private ImageView iconHome, iconSearch, iconFavorites, iconProfile;
     private TextView textHome, textSearch, textFavorites, textProfile;
 
-    // Fragment instances
     private HomeFragment homeFragment;
     private SearchFragment searchFragment;
     private FavoritesFragment favoritesFragment;
     private ProfileFragment profileFragment;
 
-    // Current selected menu
-    private int currentMenuIndex = 0; // 0=Home, 1=Search, 2=Favorites, 3=Profile
+    private int currentMenuIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // 1. Kiểm tra nếu là lần đầu mở app
+        SharedPreferences prefs = getSharedPreferences("intro_prefs", MODE_PRIVATE);
+        boolean isFirstLaunch = prefs.getBoolean("isFirstLaunch", true);
+
+        if (isFirstLaunch) {
+            startActivity(new Intent(this, IntroActivity.class));
+            prefs.edit().putBoolean("isFirstLaunch", false).apply();
+            finish();
+            return;
+        }
+
+        // 2. Kiểm tra đăng nhập Firebase
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
+
+        // 3. Nếu hợp lệ -> load giao diện chính
         setContentView(R.layout.activity_main);
 
         initViews();
         initFragments();
         setupMenuClickListeners();
-
-        // Load default fragment (Home)
         loadFragment(homeFragment, 0);
     }
 
     private void initViews() {
-        // Menu containers
         menuHome = findViewById(R.id.menuHome);
         menuSearch = findViewById(R.id.menuSearch);
         menuFavorites = findViewById(R.id.menuFavorites);
         menuProfile = findViewById(R.id.menuProfile);
 
-        // Icons
         iconHome = findViewById(R.id.iconHome);
         iconSearch = findViewById(R.id.iconSearch);
         iconFavorites = findViewById(R.id.iconFavorites);
         iconProfile = findViewById(R.id.iconProfile);
 
-        // Texts
         textHome = findViewById(R.id.textHome);
         textSearch = findViewById(R.id.textSearch);
         textFavorites = findViewById(R.id.textFavorites);
@@ -71,76 +89,28 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupMenuClickListeners() {
         menuHome.setOnClickListener(v -> {
-            if (currentMenuIndex != 0) {
-                loadFragment(homeFragment, 0);
-            }
+            if (currentMenuIndex != 0) loadFragment(homeFragment, 0);
         });
 
         menuSearch.setOnClickListener(v -> {
-            if (currentMenuIndex != 1) {
-                loadFragment(searchFragment, 1);
-            }
+            if (currentMenuIndex != 1) loadFragment(searchFragment, 1);
         });
 
         menuFavorites.setOnClickListener(v -> {
-            if (currentMenuIndex != 2) {
-                loadFragment(favoritesFragment, 2);
-            }
+            if (currentMenuIndex != 2) loadFragment(favoritesFragment, 2);
         });
 
         menuProfile.setOnClickListener(v -> {
-            if (currentMenuIndex != 3) {
-                loadFragment(profileFragment, 3);
-            }
+            if (currentMenuIndex != 3) loadFragment(profileFragment, 3);
         });
     }
 
     private void loadFragment(Fragment fragment, int menuIndex) {
-        // Load fragment
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragmentContainer, fragment)
                 .commit();
-
-        // Update menu appearance
-        updateMenuAppearance(menuIndex);
         currentMenuIndex = menuIndex;
-    }
-
-    private void updateMenuAppearance(int selectedIndex) {
-        resetMenuAppearance();
-        switch (selectedIndex) {
-            case 0:
-                iconHome.setColorFilter(ContextCompat.getColor(this, R.color.primary_color));
-                textHome.setTextColor(ContextCompat.getColor(this, R.color.primary_color));
-                break;
-            case 1:
-                iconSearch.setColorFilter(ContextCompat.getColor(this, R.color.primary_color));
-                textSearch.setTextColor(ContextCompat.getColor(this, R.color.primary_color));
-                break;
-            case 2:
-                iconFavorites.setColorFilter(ContextCompat.getColor(this, R.color.primary_color));
-                textFavorites.setTextColor(ContextCompat.getColor(this, R.color.primary_color));
-                break;
-            case 3:
-                iconProfile.setColorFilter(ContextCompat.getColor(this, R.color.primary_color));
-                textProfile.setTextColor(ContextCompat.getColor(this, R.color.primary_color));
-                break;
-        }
-    }
-
-    private void resetMenuAppearance() {
-        int defaultColor = ContextCompat.getColor(this, R.color.gray_color);
-
-        iconHome.setColorFilter(defaultColor);
-        iconSearch.setColorFilter(defaultColor);
-        iconFavorites.setColorFilter(defaultColor);
-        iconProfile.setColorFilter(defaultColor);
-
-        textHome.setTextColor(defaultColor);
-        textSearch.setTextColor(defaultColor);
-        textFavorites.setTextColor(defaultColor);
-        textProfile.setTextColor(defaultColor);
     }
 
     @Override

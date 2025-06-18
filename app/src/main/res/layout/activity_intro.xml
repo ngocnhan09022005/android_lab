@@ -36,19 +36,16 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="16dp"
                 android:clickable="true"
-                android:contentDescription="Tiếp tục"
                 android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                android:text="Get Started"
-                android:textColor="#673AB7"
-                android:textSize="40sp"
-                android:textStyle="bold"
+                android:background="@drawable/ripple_circle"
+                android:contentDescription="Tiếp tục"
                 app:srcCompat="@drawable/btn_arraw1" />
+
 
         </LinearLayout>
     </ScrollView>
