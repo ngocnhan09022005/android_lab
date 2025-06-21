@@ -49,10 +49,25 @@ dependencies {
 
     // Firebase Auth + Crashlytics
     implementation(libs.firebase.auth)
-    implementation(libs.firebase.crashlytics)
+    implementation(platform("com.google.firebase:firebase-bom:32.2.0"))
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.android.gms:play-services-auth:20.6.0")
+    implementation("com.google.android.gms:play-services-base:18.2.0")
 
     // Google Sign-In
     implementation("com.google.android.gms:play-services-auth:21.0.0")
+    implementation(libs.firebase.firestore)
+
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.2.0"))
+    implementation("com.google.firebase:firebase-database")
+    implementation("com.google.firebase:firebase-storage")
+
+    // Glide for image loading
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    implementation(libs.firebase.inappmessaging)
+    implementation(libs.swiperefreshlayout)
+    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
 
     // Testing
     testImplementation(libs.junit)

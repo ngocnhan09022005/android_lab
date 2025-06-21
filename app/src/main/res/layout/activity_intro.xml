@@ -29,10 +29,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="32dp"
                 android:layout_marginRight="40dp"
-                android:text="\t \t \t \t Get Started"
-                android:textColor="#673AB7"
+                android:gravity="center"
+                android:text="Enjoy Restaurant Quality Meals at Home"
+                android:textColor="#F44336"
                 android:textSize="40sp"
-                android:textStyle="bold" />
+                />
+
 
             <ImageView
                 android:id="@+id/imageView"
@@ -45,6 +47,15 @@
                 android:background="@drawable/ripple_circle"
                 android:contentDescription="Tiếp tục"
                 app:srcCompat="@drawable/btn_arraw1" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="40dp"
+                android:gravity="center"
+                android:text="Design By NeatRoots"
+                android:textColor="#F44336"
+                android:textSize="20sp" />
 
 
         </LinearLayout>

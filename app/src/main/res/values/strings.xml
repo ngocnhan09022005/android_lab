@@ -1,13 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">android_lab</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome !"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
-    <string name="login_failed">"Login failed"</string>
-    <string name="default_web_client_id">298737128807-r7aom57mb4ovaf5mccd5l0pfjo0vd42k.apps.googleusercontent.com</string>
+    <string name="app_name">Android Lab</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Trang chủ</string>
+    <string name="nav_search">Tìm kiếm</string>
+    <string name="nav_favorites">Yêu thích</string>
+    <string name="nav_profile">Cá nhân</string>
+
+    <!-- Common -->
+    <string name="search_hint">Tìm món ăn...</string>
+    <string name="empty_favorites">Chưa có món ăn yêu thích</string>
+    <string name="popular_foods">Món ăn phổ biến</string>
+    <string name="view_menu">Xem thực đơn</string>
 </resources>
+

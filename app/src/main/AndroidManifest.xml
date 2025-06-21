@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:name=".MyApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -12,27 +13,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Android_lab"
         tools:targetApi="31">
-
+        <activity
+            android:name=".ui.AdminActivity"
+            android:exported="false" />
         <!-- Màn hình khởi động chính -->
         <activity
             android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Intro chỉ mở khi cần -->
+        </activity> <!-- Intro chỉ mở khi cần -->
         <activity
             android:name=".ui.IntroActivity"
             android:exported="false" />
-
         <activity
             android:name=".ui.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.Register"
+            android:name=".ui.RegisterActivity"
             android:exported="false" />
     </application>
 

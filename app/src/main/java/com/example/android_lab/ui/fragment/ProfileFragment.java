@@ -6,44 +6,92 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.android_lab.R;
 import com.example.android_lab.ui.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ProfileFragment extends Fragment {
+    private TextView tvUsername;
+    private TextView tvEmail;
+    private Button btnLogout;
+    private FirebaseAuth auth;
+    private FirebaseFirestore db;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
-    private Button btnEditProfile, btnLogout;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         initViews(view);
-        setupClickListeners();
+        setupLogoutButton();
+        setupSwipeToRefresh();
+        loadUserProfile();
         return view;
     }
 
     private void initViews(View view) {
-        btnEditProfile = view.findViewById(R.id.btnEditProfile);
+        tvUsername = view.findViewById(R.id.tvUsername);
+        tvEmail = view.findViewById(R.id.tvEmail);
         btnLogout = view.findViewById(R.id.btnLogout);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefresh);
+        auth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
     }
 
-    private void setupClickListeners() {
-        btnEditProfile.setOnClickListener(v ->
-                Toast.makeText(getContext(), "Chức năng chỉnh sửa thông tin", Toast.LENGTH_SHORT).show()
-        );
 
-        btnLogout.setOnClickListener(v -> {
-            FirebaseAuth.getInstance().signOut();
-            Toast.makeText(getContext(), "Đăng xuất thành công", Toast.LENGTH_SHORT).show();
+    private void setupLogoutButton() {
+        btnLogout.setOnClickListener(v -> logout());
+    }
 
-            // Chuyển về màn hình Login và clear back stack
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+    private void setupSwipeToRefresh() {
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            loadUserProfile();
         });
+    }
+    private void loadUserProfile() {
+        swipeRefreshLayout.setRefreshing(true);
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            db.collection("users")
+                    .document(userId)
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            String username = documentSnapshot.getString("name");
+                            String email = documentSnapshot.getString("email");
+
+                            tvUsername.setText(username);
+                            tvEmail.setText(email);
+                        }
+                        swipeRefreshLayout.setRefreshing(false);
+                    })
+                    .addOnFailureListener(e -> {
+                        swipeRefreshLayout.setRefreshing(false);
+                        // Optionally show error
+                    });
+        } else {
+            swipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    private void logout() {
+        auth.signOut();
+        startActivity(new Intent(requireActivity(), LoginActivity.class));
+        requireActivity().finish();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadUserProfile();
     }
 }

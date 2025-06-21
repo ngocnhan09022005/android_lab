@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.Register">
+    tools:context=".ui.RegisterActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -28,15 +28,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="32dp"
                 android:layout_marginRight="32dp"
-                android:textStyle="bold"
-                android:textSize="40sp"
+                android:text="Create\nAccount"
                 android:textColor="#3B608C"
-                android:text="Create\nAccount" />
+                android:textSize="40sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/editName"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="32dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginRight="32dp"
@@ -52,31 +52,31 @@
             <EditText
                 android:id="@+id/editEmail"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:ems="10"
-                android:inputType="textEmailAddress"
-                android:layout_marginRight="32dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="32dp"
-                android:hint="Email"
-                android:textColorHint="#756C6C"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="32dp"
+                android:background="@drawable/edittext_background"
                 android:drawableStart="@drawable/email"
                 android:drawablePadding="16dp"
-                android:layout_marginTop="16dp"
+                android:ems="10"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
                 android:padding="8dp"
-                android:background="@drawable/edittext_background"/>
+                android:textColorHint="#756C6C" />
 
             <EditText
                 android:id="@+id/editPassword"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="32dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginRight="32dp"
                 android:background="@drawable/edittext_background"
                 android:drawableStart="@drawable/password"
                 android:drawablePadding="16dp"
                 android:ems="10"
                 android:hint="Password"
-                android:layout_marginTop="16dp"
                 android:inputType="textPassword"
                 android:padding="8dp"
                 android:textColorHint="#756C6C" />
@@ -93,7 +93,6 @@
                 android:contentDescription="Đăng ký"
                 app:srcCompat="@drawable/btn_arrow2" />
 
-
             <TextView
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
@@ -105,12 +104,46 @@
                 android:layout_marginTop="8dp"
                 android:text="I have a account"/>
 
-            <ImageView
-                android:id="@+id/btnGoogle"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/google" />
+                android:layout_height="match_parent"
+                android:layout_marginEnd="32dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
 
+                <Button
+                    android:id="@+id/btnRegisterFB"
+                    style="@android:style/Widget.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_background"
+                    android:drawableEnd="@drawable/facebook"
+                    android:drawablePadding="16dp"
+                    android:padding="16dp"
+                    android:text="Facebook"
+                    android:textColor="#3b608c"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnRegisterGG"
+                    style="@android:style/Widget.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_background"
+                    android:drawableEnd="@drawable/google"
+                    android:drawablePadding="16dp"
+                    android:padding="16dp"
+                    android:text="Google"
+                    android:textColor="#3b608c"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

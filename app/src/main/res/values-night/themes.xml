@@ -1,7 +1,43 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.Android_lab" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/accent</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">#1A1A1A</item>
+        <item name="android:windowLightStatusBar">false</item>
+
+        <!-- Background colors -->
+        <item name="android:colorBackground">#121212</item>
+        <item name="colorSurface">#1E1E1E</item>
+
+        <!-- Text colors -->
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">#B3FFFFFF</item>
+
+        <!-- Component styles -->
+        <item name="materialCardViewStyle">@style/Widget.App.CardView.Dark</item>
+        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigation.Dark</item>
+    </style>
+
+    <style name="Widget.App.CardView.Dark" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardCornerRadius">12dp</item>
+        <item name="cardElevation">4dp</item>
+        <item name="contentPadding">0dp</item>
+        <item name="cardBackgroundColor">#2A2A2A</item>
+    </style>
+
+    <style name="Widget.App.BottomNavigation.Dark" parent="Widget.Material3.BottomNavigationView">
+        <item name="android:background">@drawable/button_background_dark</item>
+        <item name="itemIconTint">@color/bottom_nav_colors_dark</item>
+        <item name="itemTextColor">@color/bottom_nav_colors_dark</item>
+        <item name="elevation">8dp</item>
     </style>
 </resources>

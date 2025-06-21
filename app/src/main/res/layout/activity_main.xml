@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.MainActivity">
+    android:background="?android:colorBackground">
 
-    <!-- Top Bar -->
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="0dp"
-        android:layout_height="44dp"
-        android:background="#EDE9E9"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- Fragment Container - ĐÂY LÀ CHỖ HIỂN THỊ FRAGMENT -->
-    <FrameLayout
-        android:id="@+id/fragmentContainer"
-        android:layout_width="0dp"
+    <!-- Scrollable Content -->
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#FFFFFF"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintBottom_toTopOf="@+id/bottomMenu"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomMenu">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Fragment container -->
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/fragmentContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp" />
+        </LinearLayout>
+    </ScrollView>
 
     <!-- Bottom Navigation Menu -->
     <LinearLayout
@@ -36,136 +36,102 @@
         android:layout_height="70dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/button_background"
-        android:elevation="20dp"
+        android:elevation="8dp"
         android:orientation="horizontal"
         android:gravity="center"
         android:paddingHorizontal="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Home Menu Item -->
+        <!-- Menu Home -->
         <LinearLayout
             android:id="@+id/menuHome"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical"
-            android:paddingVertical="8dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless">
-
+            android:orientation="vertical">
             <ImageView
                 android:id="@+id/iconHome"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_home"
-                android:contentDescription="Home" />
-
+                android:src="@drawable/ic_home" />
             <TextView
                 android:id="@+id/textHome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Home"
                 android:textSize="12sp"
-                android:textColor="#666666"
                 android:layout_marginTop="4dp" />
         </LinearLayout>
 
-        <!-- Search Menu Item -->
+        <!-- Menu Search -->
         <LinearLayout
             android:id="@+id/menuSearch"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical"
-            android:paddingVertical="8dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless">
-
+            android:orientation="vertical">
             <ImageView
                 android:id="@+id/iconSearch"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_search"
-                android:contentDescription="Search" />
-
+                android:src="@drawable/ic_search" />
             <TextView
                 android:id="@+id/textSearch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Search"
                 android:textSize="12sp"
-                android:textColor="#666666"
                 android:layout_marginTop="4dp" />
         </LinearLayout>
 
-        <!-- Favorites Menu Item -->
+        <!-- Menu Favorites -->
         <LinearLayout
             android:id="@+id/menuFavorites"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical"
-            android:paddingVertical="8dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless">
-
+            android:orientation="vertical">
             <ImageView
                 android:id="@+id/iconFavorites"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_favorite"
-                android:contentDescription="Favorites" />
-
+                android:src="@drawable/ic_favorite" />
             <TextView
                 android:id="@+id/textFavorites"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Favorites"
                 android:textSize="12sp"
-                android:textColor="#666666"
                 android:layout_marginTop="4dp" />
         </LinearLayout>
 
-        <!-- Profile Menu Item -->
+        <!-- Menu Profile -->
         <LinearLayout
             android:id="@+id/menuProfile"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical"
-            android:paddingVertical="8dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackground">
-
+            android:orientation="vertical">
             <ImageView
                 android:id="@+id/iconProfile"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_account"
-                android:contentDescription="Profile" />
-
+                android:src="@drawable/ic_account" />
             <TextView
                 android:id="@+id/textProfile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Profile"
                 android:textSize="12sp"
-                android:textColor="#666666"
                 android:layout_marginTop="4dp" />
         </LinearLayout>
-
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
