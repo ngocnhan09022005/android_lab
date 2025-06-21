@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Surface Colors - Dark Theme -->
+    <!-- Text Colors - Dark Theme -->
+    <!-- Bottom Navigation Colors - Dark Theme -->
+    <color name="md_theme_light_primary">#81C784</color>
+</resources>
