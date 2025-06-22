@@ -2,14 +2,17 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:colorBackground">
+    android:background="@android:color/white">
 
     <!-- Danh sách món ăn yêu thích -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvFavorites"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="100dp"
         android:clipToPadding="false"
         android:scrollbars="vertical" />
 
@@ -21,7 +24,7 @@
         android:layout_gravity="center"
         android:text="Chưa có món ăn yêu thích nào"
         android:textSize="18sp"
-        android:textColor="?android:textColorSecondary"
+        android:textColor="@android:color/darker_gray"
         android:textAlignment="center"
         android:visibility="gone" />
 </FrameLayout>

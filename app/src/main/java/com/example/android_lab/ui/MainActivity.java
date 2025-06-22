@@ -11,8 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.activity.OnBackPressedCallback;
-
 import com.example.android_lab.R;
+import com.example.android_lab.ui.fragment.CartFragment;
 import com.example.android_lab.ui.fragment.FavoritesFragment;
 import com.example.android_lab.ui.fragment.HomeFragment;
 import com.example.android_lab.ui.fragment.ProfileFragment;
@@ -22,7 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
-    private LinearLayout menuHome, menuSearch, menuFavorites, menuProfile;
+    private LinearLayout menuHome, menuSearch, menuFavorites, menuProfile, menuCart;
     private ImageView iconHome, iconSearch, iconFavorites, iconProfile;
     private TextView textHome, textSearch, textFavorites, textProfile;
 
@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private SearchFragment searchFragment;
     private FavoritesFragment favoritesFragment;
     private ProfileFragment profileFragment;
+    private CartFragment cartFragment;
 
     private int currentMenuIndex = 0;
 
@@ -37,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // 1. Kiểm tra nếu là lần đầu mở app
         SharedPreferences prefs = getSharedPreferences("intro_prefs", MODE_PRIVATE);
         boolean isFirstLaunch = prefs.getBoolean("isFirstLaunch", true);
 
@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // 2. Kiểm tra đăng nhập Firebase
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
             startActivity(new Intent(this, LoginActivity.class));
@@ -56,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // 3. Nếu hợp lệ -> load giao diện chính
         setContentView(R.layout.activity_main);
 
         initViews();
@@ -99,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
         menuSearch = findViewById(R.id.menuSearch);
         menuFavorites = findViewById(R.id.menuFavorites);
         menuProfile = findViewById(R.id.menuProfile);
+        menuCart = findViewById(R.id.menuCart);
 
         iconHome = findViewById(R.id.iconHome);
         iconSearch = findViewById(R.id.iconSearch);
@@ -114,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
     private void initFragments() {
         if (homeFragment == null) homeFragment = new HomeFragment();
         if (searchFragment == null) searchFragment = new SearchFragment();
+        if (cartFragment == null) cartFragment = new CartFragment();
         if (favoritesFragment == null) favoritesFragment = new FavoritesFragment();
         if (profileFragment == null) profileFragment = new ProfileFragment();
     }
@@ -133,15 +133,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        menuCart.setOnClickListener(v -> {
+            updateMenuIcons(3);
+            loadFragment(cartFragment, 4);
+        });
+
+
         menuFavorites.setOnClickListener(v -> {
-            if (currentMenuIndex != 2) {
+            if (currentMenuIndex != 4) {
                 updateMenuIcons(2);
                 loadFragment(favoritesFragment, 2);
             }
         });
 
         menuProfile.setOnClickListener(v -> {
-            if (currentMenuIndex != 3) {
+            if (currentMenuIndex != 5) {
                 updateMenuIcons(3);
                 loadFragment(profileFragment, 3);
             }

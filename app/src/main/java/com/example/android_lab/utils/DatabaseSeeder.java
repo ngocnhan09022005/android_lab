@@ -1,11 +1,11 @@
 package com.example.android_lab.utils;
 
-import com.example.android_lab.data.model.Food;
+import com.example.android_lab.models.Food;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class DatabaseSeeder {
-    private DatabaseReference databaseRef;
+    private final DatabaseReference databaseRef;
 
     public DatabaseSeeder() {
         databaseRef = FirebaseDatabase.getInstance().getReference();

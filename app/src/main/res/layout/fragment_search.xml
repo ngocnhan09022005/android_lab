@@ -5,7 +5,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="?android:colorBackground">
+    android:paddingBottom="100dp"
+    android:clipToPadding="false"
+    android:background="@android:color/white">
 
     <!-- Thanh tìm kiếm -->
     <LinearLayout

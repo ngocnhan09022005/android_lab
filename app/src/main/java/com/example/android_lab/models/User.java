@@ -6,10 +6,6 @@ public class User {
     private String phone;
     private String role;
 
-    public User() {
-        // Empty constructor required for Firestore
-    }
-
     public User(String name, String email, String role) {
         this.name = name;
         this.email = email;

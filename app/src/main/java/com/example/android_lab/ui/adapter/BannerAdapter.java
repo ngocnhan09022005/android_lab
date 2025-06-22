@@ -15,8 +15,8 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerViewHolder> {
-    private Context context;
-    private List<Integer> bannerImages;
+    private final Context context;
+    private final List<Integer> bannerImages;
 
     public BannerAdapter(Context context, List<Integer> bannerImages) {
         this.context = context;

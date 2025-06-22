@@ -13,5 +13,10 @@
     <string name="empty_favorites">Chưa có món ăn yêu thích</string>
     <string name="popular_foods">Món ăn phổ biến</string>
     <string name="view_menu">Xem thực đơn</string>
+    <string name="todo">TODO</string>
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="favorites">Favorites</string>
+    <string name="profile">Profile</string>
 </resources>
 

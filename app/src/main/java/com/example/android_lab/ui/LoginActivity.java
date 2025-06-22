@@ -8,10 +8,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.android_lab.R;
 import com.example.android_lab.models.User;
 import com.google.android.gms.auth.api.signin.*;
@@ -88,6 +86,7 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
+                        assert user != null;
                         updateUI(user);
                     } else {
                         Toast.makeText(this, "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();

@@ -18,16 +18,13 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.*;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText editName, editEmail, editPassword;
-    private ImageView btnRegister;
-    private Button btnGoogle;
-    private TextView btnLoginNow;
 
     private FirebaseAuth mAuth;
     private GoogleSignInClient googleSignInClient;
@@ -43,9 +40,9 @@ public class RegisterActivity extends AppCompatActivity {
         editName = findViewById(R.id.editName);
         editEmail = findViewById(R.id.editEmail);
         editPassword = findViewById(R.id.editPassword);
-        btnRegister = findViewById(R.id.btnRegister);
-        btnLoginNow = findViewById(R.id.btnLogin);
-        btnGoogle = findViewById(R.id.btnRegisterGG);
+        ImageView btnRegister = findViewById(R.id.btnRegister);
+        TextView btnLoginNow = findViewById(R.id.btnLogin);
+        Button btnGoogle = findViewById(R.id.btnRegisterGG);
 
         btnRegister.setOnClickListener(v -> {
             String name = editName.getText().toString().trim();
@@ -87,6 +84,7 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                        assert firebaseUser != null;
                         String userId = firebaseUser.getUid();
 
                         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -99,7 +97,6 @@ public class RegisterActivity extends AppCompatActivity {
                                 .addOnSuccessListener(aVoid -> {
                                     Toast.makeText(this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
 
-                                    // Chuyển thẳng đến MainActivity sau khi đăng ký
                                     SharedPreferences prefs = getSharedPreferences("intro_prefs", MODE_PRIVATE);
                                     prefs.edit().putBoolean("isFirstLaunch", false).apply();
 
@@ -107,7 +104,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     finishAffinity(); // Đóng tất cả activity trước đó
                                 });
                     } else {
-                        Toast.makeText(this, "Đăng ký thất bại: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Đăng ký thất bại: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -145,6 +142,7 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
+                        assert user != null;
                         String userId = user.getUid();
 
                         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -164,7 +162,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 finishAffinity();
                             });
                     } else {
-                        Toast.makeText(this, "Đăng nhập Google thất bại: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Đăng nhập Google thất bại: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }

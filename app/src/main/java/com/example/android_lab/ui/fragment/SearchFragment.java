@@ -17,10 +17,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android_lab.R;
-import com.example.android_lab.data.model.Food;
+import com.example.android_lab.models.Food;
 import com.example.android_lab.ui.adapter.FoodAdapter;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public class SearchFragment extends Fragment {
     private List<Food> foodList;
     private FirebaseFirestore db;
     private Handler searchHandler;
-    private static final long SEARCH_DELAY = 500; // 500ms delay
+    private static final long SEARCH_DELAY = 500;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,7 +66,6 @@ public class SearchFragment extends Fragment {
     }
 
     private void setupSearchView() {
-        // Debounce search functionality
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}

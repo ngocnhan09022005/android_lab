@@ -7,11 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.example.android_lab.R;
 import com.example.android_lab.ui.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,9 +50,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setupSwipeToRefresh() {
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            loadUserProfile();
-        });
+        swipeRefreshLayout.setOnRefreshListener(this::loadUserProfile);
     }
     private void loadUserProfile() {
         swipeRefreshLayout.setRefreshing(true);

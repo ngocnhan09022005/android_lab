@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:background="@drawable/bg_food_card"
-    android:layout_marginBottom="12dp"
-    android:padding="12dp"
-    android:elevation="2dp">
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="horizontal"
+android:background="@drawable/bg_food_card"
+android:layout_marginBottom="12dp"
+android:padding="12dp"
+android:elevation="2dp">
 
     <!-- Hình món ăn -->
     <ImageView
@@ -45,14 +45,12 @@
     </LinearLayout>
 
     <!-- Nút Thêm vào giỏ -->
-    <Button
-        android:id="@+id/btnAddToCart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Thêm"
-        android:textSize="12sp"
-        android:backgroundTint="?attr/colorPrimary"
-        android:textColor="@android:color/white"
-        android:paddingHorizontal="12dp"
-        android:minHeight="36dp" />
+    <ImageView
+        android:id="@+id/btnRemove"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/ic_delete"
+        android:contentDescription="Xoá món ăn"
+        android:padding="4dp"/>
+
 </LinearLayout>

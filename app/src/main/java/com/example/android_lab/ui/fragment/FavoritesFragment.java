@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android_lab.R;
-import com.example.android_lab.data.model.Food;
+import com.example.android_lab.models.Food;
 import com.example.android_lab.ui.adapter.FoodAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
@@ -23,6 +23,7 @@ import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class FavoritesFragment extends Fragment {
     private RecyclerView rvFavorites;
@@ -67,7 +68,7 @@ public class FavoritesFragment extends Fragment {
     }
 
     private void setupFavoritesListener() {
-        String userId = auth.getCurrentUser().getUid();
+        String userId = Objects.requireNonNull(auth.getCurrentUser()).getUid();
         favoritesListener = db.collection("users")
             .document(userId)
             .collection("favorites")

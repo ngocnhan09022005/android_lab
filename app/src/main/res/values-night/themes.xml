@@ -1,32 +1,35 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+
+    <!-- Base Theme (Dark Mode sẽ apply tự động theo system nếu bạn dùng DayNight) -->
     <style name="Base.Theme.Android_lab" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/primary</item>
+
+        <!-- Primary Brand Colors -->
+        <item name="colorPrimary">@color/primary_dark</item>
         <item name="colorPrimaryVariant">@color/primary_dark</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/black</item>
 
-        <!-- Secondary brand color. -->
+        <!-- Secondary Colors -->
         <item name="colorSecondary">@color/accent</item>
-        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorOnSecondary">@color/black</item>
 
-        <!-- Status bar color. -->
+        <!-- Background (Quan trọng: dùng đúng attr không có android:) -->
+        <item name="android:colorBackground">@color/background_dark</item>
+        <item name="colorSurface">#1E1E1E</item>
+
+        <!-- System UI -->
         <item name="android:statusBarColor">#1A1A1A</item>
         <item name="android:windowLightStatusBar">false</item>
 
-        <!-- Background colors -->
-        <item name="android:colorBackground">#121212</item>
-        <item name="colorSurface">#1E1E1E</item>
-
-        <!-- Text colors -->
+        <!-- Text Colors -->
         <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:textColorSecondary">#B3FFFFFF</item>
+        <item name="android:textColorSecondary">@color/text_color_unselected</item>
 
-        <!-- Component styles -->
+        <!-- Component Styles -->
         <item name="materialCardViewStyle">@style/Widget.App.CardView.Dark</item>
         <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigation.Dark</item>
     </style>
 
+    <!-- CardView Style -->
     <style name="Widget.App.CardView.Dark" parent="Widget.Material3.CardView.Elevated">
         <item name="cardCornerRadius">12dp</item>
         <item name="cardElevation">4dp</item>
@@ -34,10 +37,14 @@
         <item name="cardBackgroundColor">#2A2A2A</item>
     </style>
 
+    <!-- Bottom Navigation Style -->
     <style name="Widget.App.BottomNavigation.Dark" parent="Widget.Material3.BottomNavigationView">
         <item name="android:background">@drawable/button_background_dark</item>
         <item name="itemIconTint">@color/bottom_nav_colors_dark</item>
         <item name="itemTextColor">@color/bottom_nav_colors_dark</item>
         <item name="elevation">8dp</item>
     </style>
+
+    <!-- Final Theme Entry -->
+    <style name="Theme.Android_lab" parent="Base.Theme.Android_lab" />
 </resources>

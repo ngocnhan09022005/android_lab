@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="text_color_selected">#00C897</color>
     <color name="text_color_unselected">#666666</color>
@@ -9,7 +8,18 @@
 
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="background">#F5F5F5</color>
-    <color name="md_theme_light_primary">#4CAF50</color>
-</resources>
 
+    <color name="background">#F5F5F5</color>
+    <color name="background_dark">#121212</color>
+
+
+
+
+    <color name="md_theme_light_primary">#4CAF50</color>
+
+    <!-- Bottom navigation item tint -->
+    <style name="Widget.App.BottomNavigation" parent="Widget.Material3.BottomNavigationView">
+        <item name="itemIconTint">@color/bottom_nav_colors</item>
+        <item name="itemTextColor">@color/bottom_nav_colors</item>
+    </style>
+</resources>
