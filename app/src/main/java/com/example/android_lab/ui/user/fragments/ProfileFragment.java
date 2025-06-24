@@ -1,4 +1,4 @@
-package com.example.android_lab.ui.fragment;
+package com.example.android_lab.ui.user.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.android_lab.R;
-import com.example.android_lab.ui.LoginActivity;
+import com.example.android_lab.ui.auth.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;

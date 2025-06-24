@@ -1,41 +1,34 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Base.Theme.Android_lab" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Màu chính -->
+
+    <style name="Base.Theme.Android_lab" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary_dark</item>
         <item name="colorOnPrimary">@color/black</item>
 
-        <!-- Màu phụ -->
         <item name="colorSecondary">@color/accent</item>
         <item name="colorOnSecondary">@color/black</item>
 
-        <!-- Trạng thái hệ thống -->
         <item name="android:statusBarColor">#1A1A1A</item>
-        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightStatusBar">true</item>
 
-        <!-- Màu nền -->
-        <item name="android:colorBackground">@color/background</item> <!-- Optional nếu dùng thuộc tính android: -->
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorSurface">#FAFAFA</item>
 
-        <!-- Màu mặt nền nổi -->
-        <item name="colorSurface">#1E1E1E</item>
-
-        <!-- Văn bản -->
         <item name="android:textColorPrimary">@color/black</item>
         <item name="android:textColorSecondary">@color/text_color_unselected</item>
 
-        <!-- Thành phần UI -->
-        <item name="materialCardViewStyle">@style/Widget.App.CardView.Dark</item>
-        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigation.Dark</item>
+        <item name="materialCardViewStyle">@style/Widget.App.CardView.Light</item>
+        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigation.Light</item>
     </style>
 
-    <style name="Widget.App.CardView.Dark" parent="Widget.Material3.CardView.Elevated">
+    <style name="Widget.App.CardView.Light" parent="Widget.Material3.CardView.Elevated">
         <item name="cardCornerRadius">12dp</item>
         <item name="cardElevation">4dp</item>
         <item name="contentPadding">0dp</item>
-        <item name="cardBackgroundColor">#2A2A2A</item>
+        <item name="cardBackgroundColor">#FFFFFF</item>
     </style>
 
-    <style name="Widget.App.BottomNavigation.Dark" parent="Widget.Material3.BottomNavigationView">
+    <style name="Widget.App.BottomNavigation.Light" parent="Widget.Material3.BottomNavigationView">
         <item name="android:background">@drawable/button_background_dark</item>
         <item name="itemIconTint">@color/bottom_nav_colors</item>
         <item name="itemTextColor">@color/bottom_nav_colors</item>

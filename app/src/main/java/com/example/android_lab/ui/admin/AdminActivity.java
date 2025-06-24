@@ -1,4 +1,4 @@
-package com.example.android_lab.ui;
+package com.example.android_lab.ui.admin;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +11,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import com.example.android_lab.R;
-import com.example.android_lab.ui.fragment.AddFoodFragment;
+import com.example.android_lab.ui.auth.LoginActivity;
+import com.example.android_lab.ui.admin.fragments.AddFoodFragment;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class AdminActivity extends AppCompatActivity {

@@ -1,4 +1,4 @@
-package com.example.android_lab.ui.fragment;
+package com.example.android_lab.ui.user.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

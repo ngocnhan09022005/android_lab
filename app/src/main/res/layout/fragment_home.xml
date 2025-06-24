@@ -59,7 +59,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
-            <!-- Popular Title + View Menu -->
+            <!-- Section Title -->
             <LinearLayout
                 android:id="@+id/popularSection"
                 android:layout_width="0dp"
@@ -81,28 +81,49 @@
                     android:textColor="@android:color/black"/>
 
                 <TextView
-                    android:id="@+id/tvViewMenu"
+                    android:id="@+id/tvViewMenuFood"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="View Menu"
+                    android:text="View Menu Food"
                     android:textColor="#4CAF50"
                     android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/tvViewMenuDrink"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="View Menu Drink"
+                    android:textColor="#4CAF50"
+                    android:textStyle="bold"
+                    android:layout_marginStart="16dp"/>
             </LinearLayout>
 
-            <!-- Popular Food List -->
+            <!-- Popular Food -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvPopularFood"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:paddingHorizontal="16dp"
+                android:clipToPadding="false"
+                android:scrollbars="vertical"
                 app:layout_constraintTop_toBottomOf="@id/popularSection"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:clipToPadding="false"
-                android:scrollbars="vertical"/>
+                app:layout_constraintEnd_toEndOf="parent"/>
 
-            <!-- Loading -->
+            <!-- Popular Drink -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvPopularDrink"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:paddingHorizontal="16dp"
+                android:clipToPadding="false"
+                android:scrollbars="vertical"
+                app:layout_constraintTop_toBottomOf="@id/rvPopularFood"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <!-- ProgressBar -->
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
@@ -112,7 +133,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

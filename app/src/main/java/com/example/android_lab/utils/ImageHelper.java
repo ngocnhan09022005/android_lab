@@ -1,4 +1,4 @@
-package com.example.android_lab.helps;
+package com.example.android_lab.utils;
 
 import android.content.Intent;
 import android.provider.MediaStore;

@@ -1,4 +1,4 @@
-package com.example.android_lab.ui.fragment;
+package com.example.android_lab.ui.admin.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -19,7 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.android_lab.R;
-import com.example.android_lab.helps.ImageHelper;
+import com.example.android_lab.utils.ImageHelper;
 import com.example.android_lab.models.Food;
 import com.example.android_lab.utils.ImageUploader;
 import com.google.firebase.database.DatabaseReference;
@@ -27,8 +28,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class AddFoodFragment extends Fragment {
 
-    private EditText etName, etPrice;
-    private Button btnAdd, btnPickImage;
+    private EditText etName, etPrice, etDescription, quantity;
+    private Switch btnSwitch;
+    private Button btnAdd, btnPickImage, btnViewFoodList;
     private ImageView imgPreview;
     private Uri imageUri;
     private boolean isUploading = false;
@@ -48,6 +50,10 @@ public class AddFoodFragment extends Fragment {
 
         btnPickImage.setOnClickListener(v -> ImageHelper.openGallery(imagePickerLauncher));
         btnAdd.setOnClickListener(v -> addFood());
+        btnViewFoodList.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), com.example.android_lab.ui.admin.MenuActivity.class);
+            startActivity(intent);
+        });
 
         return view;
     }
@@ -55,9 +61,13 @@ public class AddFoodFragment extends Fragment {
     private void initViews(View view) {
         etName = view.findViewById(R.id.etFoodName);
         etPrice = view.findViewById(R.id.etFoodPrice);
+        etDescription = view.findViewById(R.id.etFoodDescription);
+        quantity = view.findViewById(R.id.etFoodQuantity);
         btnAdd = view.findViewById(R.id.btnAddFood);
+        btnSwitch = view.findViewById(R.id.btnSwitch);
         btnPickImage = view.findViewById(R.id.btnPickImage);
         imgPreview = view.findViewById(R.id.imgPreview);
+        btnViewFoodList = view.findViewById(R.id.btnViewFoodList);
     }
 
     private void initFirebase() {
@@ -86,6 +96,9 @@ public class AddFoodFragment extends Fragment {
 
         String name = etName.getText().toString().trim();
         String priceStr = etPrice.getText().toString().trim();
+        String description = etDescription.getText().toString().trim();
+        boolean switchValue = btnSwitch.isChecked();
+        int quantityStr = Integer.parseInt(quantity.getText().toString().trim());
 
         if (!validateInput(name, priceStr, imageUri)) return;
 
@@ -102,7 +115,7 @@ public class AddFoodFragment extends Fragment {
             return;
         }
 
-        Food food = new Food(foodId, name, price, "", true);
+        Food food = new Food(foodId, name, price, switchValue, description, quantityStr);
 
         ImageUploader.uploadImage(imageUri, foodId, new ImageUploader.UploadCallback() {
             @Override

@@ -2,18 +2,29 @@ package com.example.android_lab.models;
 
 import java.io.Serializable;
 
-public class Food  implements Serializable {
+public class Food  implements Serializable, CartItem {
     private String id;
     private String name;
     private double price;
     private String imageUrl;
+    private String description;
+    private boolean isPopular;
+    private int quantity = 1;
+
+    public Food(String foodId, String name, double price, boolean b, String description, int quantityStr) {
+        this.id = foodId;
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.imageUrl = "";
+        this.isPopular = b;
+        this.quantity = quantityStr;
+    }
 
     public String getDescription() {
         return description;
     }
 
-    private String description;
-    private boolean isPopular;
 
     public int getQuantity() {
         return quantity;
@@ -23,16 +34,17 @@ public class Food  implements Serializable {
         this.quantity = quantity;
     }
 
-    private int quantity;
 
     public Food() {}
 
-    public Food(String id, String name, double price, String imageUrl, boolean isPopular) {
+    public Food(String id, String name, double price, String imageUrl, boolean isPopular, String description, int quantity) {
         this.id = id;
         this.name = name;
         this.price = price;
+        this.description = description;
         this.imageUrl = imageUrl;
         this.isPopular = isPopular;
+        this.quantity = quantity;
     }
 
     // Getter

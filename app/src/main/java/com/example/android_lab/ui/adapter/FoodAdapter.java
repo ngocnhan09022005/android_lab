@@ -14,8 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.android_lab.R;
 import com.example.android_lab.models.Food;
-import com.example.android_lab.ui.FoodDetailActivity;
+import com.example.android_lab.ui.user.FoodDetailActivity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import java.util.List;
 import java.util.Objects;
@@ -66,15 +67,25 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
             btnAddToCart.setOnClickListener(v -> {
                 String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-                FirebaseDatabase.getInstance()
-                        .getReference("cart")
-                        .child(uid)
-                        .child(food.getId())
-                        .setValue(food)
-                        .addOnSuccessListener(unused ->
-                                Toast.makeText(context, "Đã thêm vào giỏ", Toast.LENGTH_SHORT).show())
-                        .addOnFailureListener(e ->
-                                Toast.makeText(context, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference("cart")
+                        .child(uid).child(food.getId());
+
+                cartRef.get().addOnSuccessListener(snapshot -> {
+                    if (snapshot.exists()) {
+                        Food existingFood = snapshot.getValue(Food.class);
+                        int currentQuantity = (existingFood != null) ? existingFood.getQuantity() : 0;
+                        food.setQuantity(currentQuantity + 1);
+                    } else {
+                        food.setQuantity(1);
+                    }
+
+                    cartRef.setValue(food)
+                            .addOnSuccessListener(unused -> cartRef.child("type").setValue("food"))
+                            .addOnSuccessListener(unused -> Toast.makeText(context, "Đã thêm vào giỏ", Toast.LENGTH_SHORT).show())
+                            .addOnFailureListener(e -> Toast.makeText(context, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+
+                }).addOnFailureListener(e ->
+                        Toast.makeText(context, "Lỗi đọc giỏ hàng: " + e.getMessage(), Toast.LENGTH_SHORT).show());
             });
 
             itemView.setOnClickListener(v -> {

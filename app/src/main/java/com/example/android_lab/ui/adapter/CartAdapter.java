@@ -10,20 +10,34 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.android_lab.R;
+import com.example.android_lab.models.CartItem;
 import com.example.android_lab.models.Food;
+import com.example.android_lab.models.Drink;
+import com.example.android_lab.ui.user.FoodDetailActivity;
+import com.example.android_lab.ui.user.DrinkDetailActivity;
+
 import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
-    private final List<Food> cartList;
-    private final OnRemoveClickListener removeClickListener;
 
     public interface OnRemoveClickListener {
-        void onRemove(Food food);
+        void onRemove(CartItem item);
     }
 
-    public CartAdapter(List<Food> cartList, OnRemoveClickListener removeClickListener) {
+    public interface OnQuantityChangeListener {
+        void onQuantityChange(CartItem item, int newQuantity);
+    }
+
+    private final List<CartItem> cartList;
+    private final OnRemoveClickListener removeClickListener;
+    private final OnQuantityChangeListener quantityChangeListener;
+
+    public CartAdapter(List<CartItem> cartList,
+                       OnRemoveClickListener removeClickListener,
+                       OnQuantityChangeListener quantityChangeListener) {
         this.cartList = cartList;
         this.removeClickListener = removeClickListener;
+        this.quantityChangeListener = quantityChangeListener;
     }
 
     @NonNull
@@ -36,23 +50,46 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
-        Food food = cartList.get(position);
+        CartItem item = cartList.get(position);
 
-        holder.tvName.setText(food.getName());
-        holder.tvPrice.setText(String.format("%,.0f₫", food.getPrice()));
+        holder.tvName.setText(item.getName());
+        holder.tvPrice.setText(String.format("%,.0f₫", item.getPrice()));
+        holder.tvQuantity.setText(String.valueOf(item.getQuantity()));
+
         Glide.with(holder.itemView.getContext())
-                .load(food.getImageUrl())
+                .load(item.getImageUrl())
                 .into(holder.imgFood);
 
-        holder.btnRemove.setOnClickListener(v -> removeClickListener.onRemove(food));
+        holder.btnRemove.setOnClickListener(v -> removeClickListener.onRemove(item));
+
+        holder.btnIncrease.setOnClickListener(v -> {
+            int newQty = item.getQuantity() + 1;
+            quantityChangeListener.onQuantityChange(item, newQty);
+        });
+
+        holder.btnDecrease.setOnClickListener(v -> {
+            int currentQty = item.getQuantity();
+            if (currentQty > 1) {
+                int newQty = currentQty - 1;
+                quantityChangeListener.onQuantityChange(item, newQty);
+            } else {
+                removeClickListener.onRemove(item);
+            }
+        });
+
 
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(holder.itemView.getContext(), com.example.android_lab.ui.FoodDetailActivity.class);
-            intent.putExtra("food", food);
+            Intent intent;
+            if (item instanceof Food) {
+                intent = new Intent(holder.itemView.getContext(), FoodDetailActivity.class);
+                intent.putExtra("food", (Food) item);
+            } else {
+                intent = new Intent(holder.itemView.getContext(), DrinkDetailActivity.class);
+                intent.putExtra("drink", (Drink) item);
+            }
             holder.itemView.getContext().startActivity(intent);
         });
     }
-
 
     @Override
     public int getItemCount() {
@@ -60,15 +97,18 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     }
 
     static class CartViewHolder extends RecyclerView.ViewHolder {
-        TextView tvName, tvPrice;
-        ImageView imgFood, btnRemove;
+        TextView tvName, tvPrice, tvQuantity;
+        ImageView imgFood, btnRemove, btnIncrease, btnDecrease;
 
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tvFoodName);
             tvPrice = itemView.findViewById(R.id.tvFoodPrice);
+            tvQuantity = itemView.findViewById(R.id.tvQuantity);
             imgFood = itemView.findViewById(R.id.imgFood);
             btnRemove = itemView.findViewById(R.id.btnRemove);
+            btnIncrease = itemView.findViewById(R.id.btnIncrease);
+            btnDecrease = itemView.findViewById(R.id.btnDecrease);
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.example.android_lab.ui;
+package com.example.android_lab.ui.user;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,11 +12,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.activity.OnBackPressedCallback;
 import com.example.android_lab.R;
-import com.example.android_lab.ui.fragment.CartFragment;
-import com.example.android_lab.ui.fragment.FavoritesFragment;
-import com.example.android_lab.ui.fragment.HomeFragment;
-import com.example.android_lab.ui.fragment.ProfileFragment;
-import com.example.android_lab.ui.fragment.SearchFragment;
+import com.example.android_lab.ui.auth.LoginActivity;
+import com.example.android_lab.ui.user.fragments.CartFragment;
+import com.example.android_lab.ui.user.fragments.FavoritesFragment;
+import com.example.android_lab.ui.user.fragments.HomeFragment;
+import com.example.android_lab.ui.user.fragments.ProfileFragment;
+import com.example.android_lab.ui.user.fragments.SearchFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 

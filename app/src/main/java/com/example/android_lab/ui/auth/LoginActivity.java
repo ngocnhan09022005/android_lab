@@ -1,4 +1,4 @@
-package com.example.android_lab.ui;
+package com.example.android_lab.ui.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.android_lab.R;
 import com.example.android_lab.models.User;
+import com.example.android_lab.ui.admin.AdminActivity;
+import com.example.android_lab.ui.user.MainActivity;
 import com.google.android.gms.auth.api.signin.*;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
@@ -144,15 +146,30 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void updateUI(FirebaseUser user) {
-        FirebaseFirestore.getInstance().collection("users").document(user.getUid())
-                .get().addOnSuccessListener(doc -> {
+        FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(user.getUid())
+                .get()
+                .addOnSuccessListener(doc -> {
+                    if (!doc.exists()) {
+                        Toast.makeText(this, "Tài khoản không tồn tại trong hệ thống", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     String role = doc.getString("role");
                     if ("admin".equals(role)) {
                         startActivity(new Intent(this, AdminActivity.class));
-                    } else {
+                    } else if ("user".equals(role)) {
                         startActivity(new Intent(this, MainActivity.class));
+                    } else {
+                        Toast.makeText(this, "Không xác định được vai trò người dùng!", Toast.LENGTH_SHORT).show();
                     }
+
                     finish();
-                });
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Lỗi khi lấy quyền người dùng", Toast.LENGTH_SHORT).show()
+                );
     }
+
 }

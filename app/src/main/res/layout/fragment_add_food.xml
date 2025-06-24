@@ -13,6 +13,7 @@
         android:clipToPadding="false">
 
         <!-- Tên món ăn -->
+
         <EditText
             android:id="@+id/etFoodName"
             android:layout_width="match_parent"
@@ -27,6 +28,30 @@
 
         <!-- Giá món ăn -->
         <EditText
+            android:id="@+id/etFoodQuantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/edittext_background"
+            android:hint="Số lượng"
+            android:inputType="numberDecimal"
+            android:padding="12dp"
+            android:textColor="?android:textColorPrimary"
+            android:textColorHint="?android:textColorHint" />
+
+        <EditText
+            android:id="@+id/etFoodDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/edittext_background"
+            android:hint="Mô tả món ăn"
+            android:inputType="textCapWords"
+            android:padding="12dp"
+            android:textColor="?android:textColorPrimary"
+            android:textColorHint="?android:textColorHint" />
+
+        <EditText
             android:id="@+id/etFoodPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,6 +64,12 @@
             android:layout_marginBottom="12dp" />
 
         <!-- Nút chọn ảnh -->
+        <Switch
+            android:id="@+id/btnSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Đề xuất" />
+
         <Button
             android:id="@+id/btnPickImage"
             android:layout_width="match_parent"
@@ -67,6 +98,12 @@
             android:backgroundTint="?attr/colorPrimary"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnViewFoodList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Xem danh sách" />
 
     </LinearLayout>
 </ScrollView>

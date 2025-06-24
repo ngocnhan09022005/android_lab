@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.android_lab.R;
 import com.example.android_lab.models.Food;
-import com.example.android_lab.ui.FoodDetailActivity;
+import com.example.android_lab.ui.user.FoodDetailActivity;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,7 +67,7 @@ public class PopularFoodAdapter extends RecyclerView.Adapter<PopularFoodAdapter.
             tvPrice.setText(String.format("%,.0f₫", food.getPrice()));
             Glide.with(context).load(food.getImageUrl()).into(imgFood);
 
-            btnAddToCart.setVisibility(View.GONE); // Không hiện nút
+            btnAddToCart.setVisibility(View.GONE);
 
             itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(context, FoodDetailActivity.class);

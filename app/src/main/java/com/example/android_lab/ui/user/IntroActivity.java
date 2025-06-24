@@ -1,4 +1,4 @@
-package com.example.android_lab.ui;
+package com.example.android_lab.ui.user;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.android_lab.R;
+import com.example.android_lab.ui.auth.LoginActivity;
 
 public class IntroActivity extends AppCompatActivity {
 
