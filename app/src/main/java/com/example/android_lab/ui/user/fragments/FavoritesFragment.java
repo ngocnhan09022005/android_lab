@@ -62,92 +62,12 @@ public class FavoritesFragment extends Fragment {
         rvFavorites.setLayoutManager(new LinearLayoutManager(requireContext()));
         rvFavorites.setAdapter(foodAdapter);
 
-        // Add animation
         rvFavorites.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(
             requireContext(), R.anim.layout_animation_fall_down));
     }
 
     private void setupFavoritesListener() {
-        String userId = Objects.requireNonNull(auth.getCurrentUser()).getUid();
-        favoritesListener = db.collection("users")
-            .document(userId)
-            .collection("favorites")
-            .addSnapshotListener((snapshots, e) -> {
-                if (e != null) {
-                    Toast.makeText(requireContext(), "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                favoritesList.clear();
-                if (snapshots == null || snapshots.isEmpty()) {
-                    showEmptyState();
-                } else {
-                    hideEmptyState();
-                    for (DocumentChange dc : snapshots.getDocumentChanges()) {
-                        switch (dc.getType()) {
-                            case ADDED:
-                            case MODIFIED:
-                                loadFoodDetails(dc.getDocument().getId());
-                                break;
-                            case REMOVED:
-                                removeFood(dc.getDocument().getId());
-                                break;
-                        }
-                    }
-                }
-            });
-    }
-
-    private void loadFoodDetails(String foodId) {
-        db.collection("foods")
-            .document(foodId)
-            .get()
-            .addOnSuccessListener(documentSnapshot -> {
-                if (documentSnapshot.exists()) {
-                    Food food = documentSnapshot.toObject(Food.class);
-                    if (food != null) {
-                        food.setId(documentSnapshot.getId());
-                        int index = getFoodIndex(food.getId());
-                        if (index == -1) {
-                            favoritesList.add(food);
-                            foodAdapter.notifyItemInserted(favoritesList.size() - 1);
-                        } else {
-                            favoritesList.set(index, food);
-                            foodAdapter.notifyItemChanged(index);
-                        }
-                    }
-                }
-            });
-    }
-
-    private void removeFood(String foodId) {
-        int index = getFoodIndex(foodId);
-        if (index != -1) {
-            favoritesList.remove(index);
-            foodAdapter.notifyItemRemoved(index);
-            if (favoritesList.isEmpty()) {
-                showEmptyState();
-            }
-        }
-    }
-
-    private int getFoodIndex(String foodId) {
-        for (int i = 0; i < favoritesList.size(); i++) {
-            if (favoritesList.get(i).getId().equals(foodId)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    private void showEmptyState() {
-        rvFavorites.setVisibility(View.GONE);
-        tvEmptyState.setVisibility(View.VISIBLE);
-    }
-
-    private void hideEmptyState() {
-        rvFavorites.setVisibility(View.VISIBLE);
-        tvEmptyState.setVisibility(View.GONE);
+        Toast.makeText(getContext(), "Tính năng chưa phát triển" ,Toast.LENGTH_SHORT).show();
     }
 
     @Override

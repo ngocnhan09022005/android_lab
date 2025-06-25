@@ -117,7 +117,7 @@ public class AddFoodFragment extends Fragment {
 
         Food food = new Food(foodId, name, price, switchValue, description, quantityStr);
 
-        ImageUploader.uploadImage(imageUri, foodId, new ImageUploader.UploadCallback() {
+        ImageUploader.uploadImageFood(imageUri, foodId, new ImageUploader.UploadCallback() {
             @Override
             public void onSuccess(String downloadUrl) {
                 if (!isAdded()) return;

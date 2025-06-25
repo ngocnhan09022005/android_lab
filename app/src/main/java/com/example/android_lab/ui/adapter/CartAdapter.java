@@ -15,7 +15,6 @@ import com.example.android_lab.models.Food;
 import com.example.android_lab.models.Drink;
 import com.example.android_lab.ui.user.FoodDetailActivity;
 import com.example.android_lab.ui.user.DrinkDetailActivity;
-
 import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {

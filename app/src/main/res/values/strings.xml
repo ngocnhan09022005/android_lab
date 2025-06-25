@@ -18,5 +18,17 @@
     <string name="search">Search</string>
     <string name="favorites">Favorites</string>
     <string name="profile">Profile</string>
-</resources>
 
+    <string name="food_image_desc">Ảnh món ăn</string>
+    <string name="delete_item_desc">Xóa món ăn</string>
+    <string name="decrease_quantity_desc">Giảm số lượng</string>
+    <string name="increase_quantity_desc">Tăng số lượng</string>
+    <string name="sample_food_name">Spacy fresh crab</string>
+    <string name="sample_price">$ 35</string>
+    <string name="sample_quantity">1</string>
+
+    <!-- Facebook Login -->
+    <string name="facebook_app_id">646186338477540</string>
+    <string name="facebook_client_token">a07d5b89acdf647d7d1aaa2d3a96a865</string>
+    <string name="fb_login_protocol_scheme">fb646186338477540</string>
+</resources>

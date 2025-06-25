@@ -1,7 +1,12 @@
 package com.example.android_lab.ui.auth;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,17 +24,28 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.*;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 9001;
-
     private EditText emailEdit, passwordEdit;
     private ImageView btnLogin;
-    private Button btnGoogle;
+    private Button btnGoogle, btnFacebook;
     private TextView btnRegister;
 
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
+    private CallbackManager callbackManager;
 
     @Override
     protected void onStart() {
@@ -49,6 +65,33 @@ public class LoginActivity extends AppCompatActivity {
         btnRegister.setOnClickListener(v -> startActivity(new Intent(this, RegisterActivity.class)));
         btnLogin.setOnClickListener(v -> loginUser());
         btnGoogle.setOnClickListener(v -> signInWithGoogle());
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(getApplication());
+        callbackManager = CallbackManager.Factory.create();
+
+        btnFacebook.setOnClickListener(v -> {
+            LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this,
+                    java.util.Arrays.asList("email", "public_profile"));
+
+            LoginManager.getInstance().registerCallback(callbackManager,
+                    new FacebookCallback<LoginResult>() {
+                        @Override
+                        public void onSuccess(LoginResult loginResult) {
+                            handleFacebookAccessToken(loginResult.getAccessToken());
+                        }
+
+                        @Override
+                        public void onCancel() {
+                            Toast.makeText(LoginActivity.this, "Đã hủy đăng nhập Facebook", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onError(FacebookException error) {
+                            Toast.makeText(LoginActivity.this, "Lỗi Facebook: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        });
     }
 
     private void initUI() {
@@ -57,6 +100,7 @@ public class LoginActivity extends AppCompatActivity {
         passwordEdit = findViewById(R.id.editPassword);
         btnLogin = findViewById(R.id.btnLogin);
         btnGoogle = findViewById(R.id.btnGoogle);
+        btnFacebook = findViewById(R.id.btnFacebook);
         btnRegister = findViewById(R.id.btnRegister);
     }
 
@@ -88,8 +132,7 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
-                        assert user != null;
-                        updateUI(user);
+                        if (user != null) updateUI(user);
                     } else {
                         Toast.makeText(this, "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
                     }
@@ -104,6 +147,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == RC_SIGN_IN && data != null) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
@@ -113,6 +157,10 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, "Đăng nhập Google thất bại", Toast.LENGTH_SHORT).show();
             }
         }
+
+        if (callbackManager != null) {
+            callbackManager.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
@@ -121,9 +169,7 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
-                        if (user != null) {
-                            checkOrCreateUserDocument(user);
-                        }
+                        if (user != null) checkOrCreateUserDocument(user);
                     } else {
                         Toast.makeText(this, "Xác thực Google thất bại", Toast.LENGTH_SHORT).show();
                     }
@@ -172,4 +218,16 @@ public class LoginActivity extends AppCompatActivity {
                 );
     }
 
+    private void handleFacebookAccessToken(AccessToken token) {
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) checkOrCreateUserDocument(user);
+                    } else {
+                        Toast.makeText(this, "Xác thực Facebook thất bại", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
 }

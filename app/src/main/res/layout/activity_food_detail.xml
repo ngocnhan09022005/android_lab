@@ -47,14 +47,16 @@
             android:text="Số lượng: 1"
             android:textSize="16sp"
             android:layout_marginTop="8dp" />
-
         <Button
             android:id="@+id/btnAddToCartDetail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Thêm vào giỏ"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="?attr/colorPrimary"
-            android:textColor="@android:color/white" />
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/btn_increase"
+            android:text="Thêm"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"/>
+
     </LinearLayout>
 </ScrollView>

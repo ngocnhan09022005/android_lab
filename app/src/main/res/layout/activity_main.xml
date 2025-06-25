@@ -90,7 +90,7 @@
                 android:id="@+id/iconCart"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/cart" />
+                android:src="@drawable/ic_cart" />
             <TextView
                 android:id="@+id/textCart"
                 android:layout_width="wrap_content"

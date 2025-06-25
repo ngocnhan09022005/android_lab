@@ -89,7 +89,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/btnFace"
+                    android:id="@+id/btnFacebook"
                     style="@android:style/Widget.Button"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
@@ -103,6 +103,7 @@
                     android:textColor="#3b608c"
                     android:textSize="12sp"
                     android:textStyle="bold" />
+
 
                 <Button
                     android:id="@+id/btnGoogle"

@@ -3,6 +3,7 @@ package com.example.android_lab.ui.user;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,8 +25,8 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity {
 
     private LinearLayout menuHome, menuSearch, menuFavorites, menuProfile, menuCart;
-    private ImageView iconHome, iconSearch, iconFavorites, iconProfile;
-    private TextView textHome, textSearch, textFavorites, textProfile;
+    private ImageView iconHome, iconSearch, iconFavorites, iconProfile, iconCart;
+    private TextView textHome, textSearch, textFavorites, textProfile, textCart;
 
     private HomeFragment homeFragment;
     private SearchFragment searchFragment;
@@ -79,10 +80,12 @@ public class MainActivity extends AppCompatActivity {
                         currentMenuIndex = 0;
                     } else if (currentFragment instanceof SearchFragment) {
                         currentMenuIndex = 1;
-                    } else if (currentFragment instanceof FavoritesFragment) {
+                    } else if (currentFragment instanceof CartFragment) {
                         currentMenuIndex = 2;
-                    } else if (currentFragment instanceof ProfileFragment) {
+                    } else if (currentFragment instanceof FavoritesFragment) {
                         currentMenuIndex = 3;
+                    } else if (currentFragment instanceof ProfileFragment) {
+                        currentMenuIndex = 4;
                     }
                     updateMenuIcons(currentMenuIndex);
                 } else {
@@ -104,11 +107,13 @@ public class MainActivity extends AppCompatActivity {
         iconSearch = findViewById(R.id.iconSearch);
         iconFavorites = findViewById(R.id.iconFavorites);
         iconProfile = findViewById(R.id.iconProfile);
+        iconCart = findViewById(R.id.iconCart);
 
         textHome = findViewById(R.id.textHome);
         textSearch = findViewById(R.id.textSearch);
         textFavorites = findViewById(R.id.textFavorites);
         textProfile = findViewById(R.id.textProfile);
+        textCart = findViewById(R.id.textCart);
     }
 
     private void initFragments() {
@@ -135,59 +140,87 @@ public class MainActivity extends AppCompatActivity {
         });
 
         menuCart.setOnClickListener(v -> {
-            updateMenuIcons(3);
-            loadFragment(cartFragment, 4);
+            if (currentMenuIndex != 2) {
+                updateMenuIcons(2);
+                loadFragment(cartFragment, 2);
+            }
         });
 
 
         menuFavorites.setOnClickListener(v -> {
-            if (currentMenuIndex != 4) {
-                updateMenuIcons(2);
-                loadFragment(favoritesFragment, 2);
+            if (currentMenuIndex != 3) {
+                updateMenuIcons(3);
+                loadFragment(favoritesFragment, 3);
             }
         });
 
         menuProfile.setOnClickListener(v -> {
-            if (currentMenuIndex != 5) {
-                updateMenuIcons(3);
-                loadFragment(profileFragment, 3);
+            if (currentMenuIndex != 4) {
+                updateMenuIcons(4);
+                loadFragment(profileFragment, 4);
             }
         });
     }
 
     private void updateMenuIcons(int selectedIndex) {
-        // Reset all icons and text to default color
+        // Reset tất cả
         iconHome.setImageResource(R.drawable.ic_home);
         iconSearch.setImageResource(R.drawable.ic_search);
         iconFavorites.setImageResource(R.drawable.ic_favorite);
         iconProfile.setImageResource(R.drawable.ic_account);
+        iconCart.setImageResource(R.drawable.ic_cart);
 
         textHome.setTextColor(getColor(R.color.text_color_unselected));
         textSearch.setTextColor(getColor(R.color.text_color_unselected));
         textFavorites.setTextColor(getColor(R.color.text_color_unselected));
         textProfile.setTextColor(getColor(R.color.text_color_unselected));
+        textCart.setTextColor(getColor(R.color.text_color_unselected));
 
-        // Update selected icon and text
+        // Reset height
+        textHome.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        textSearch.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        textFavorites.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        textProfile.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        textCart.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+
         switch (selectedIndex) {
             case 0:
                 iconHome.setImageResource(R.drawable.ic_home_selected);
                 textHome.setTextColor(getColor(R.color.text_color_selected));
+                textHome.getLayoutParams().height = dpToPx(32);
                 break;
             case 1:
                 iconSearch.setImageResource(R.drawable.ic_search_selected);
                 textSearch.setTextColor(getColor(R.color.text_color_selected));
+                textSearch.getLayoutParams().height = dpToPx(32);
                 break;
             case 2:
-                iconFavorites.setImageResource(R.drawable.ic_favorite_selected);
-                textFavorites.setTextColor(getColor(R.color.text_color_selected));
+                iconCart.setImageResource(R.drawable.ic_cart_selected);
+                textCart.setTextColor(getColor(R.color.text_color_selected));
+                textCart.getLayoutParams().height = dpToPx(32);
                 break;
             case 3:
+                iconFavorites.setImageResource(R.drawable.ic_favorite_selected);
+                textFavorites.setTextColor(getColor(R.color.text_color_selected));
+                textFavorites.getLayoutParams().height = dpToPx(32);
+                break;
+            case 4:
                 iconProfile.setImageResource(R.drawable.ic_account_selected);
                 textProfile.setTextColor(getColor(R.color.text_color_selected));
+                textProfile.getLayoutParams().height = dpToPx(32);
                 break;
         }
+
+        // Áp dụng thay đổi
+        textHome.requestLayout();
+        textSearch.requestLayout();
+        textFavorites.requestLayout();
+        textProfile.requestLayout();
+        textCart.requestLayout();
+
         currentMenuIndex = selectedIndex;
     }
+
 
     private void loadFragment(Fragment fragment, int menuIndex) {
         if (fragment == null) return;
@@ -218,5 +251,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("currentMenuIndex", currentMenuIndex);
+    }
+
+    private int dpToPx(int dp) {
+        return (int) (dp * getResources().getDisplayMetrics().density);
     }
 }

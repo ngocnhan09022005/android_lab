@@ -16,6 +16,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Placeholder cho Facebook SDK nếu cần deep linking
+        manifestPlaceholders["appPackageName"] = "com.example.android_lab"
     }
 
     buildTypes {
@@ -39,6 +42,7 @@ android {
 }
 
 dependencies {
+    // AndroidX, Material, ViewModel, LiveData
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -47,27 +51,28 @@ dependencies {
     implementation(libs.lifecycle.livedata.ktx)
     implementation(libs.lifecycle.viewmodel.ktx)
 
-    // Firebase Auth + Crashlytics
-    implementation(libs.firebase.auth)
+    // Firebase (dùng Firebase BoM để đồng bộ version)
     implementation(platform("com.google.firebase:firebase-bom:32.2.0"))
+    implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
-    implementation("com.google.android.gms:play-services-auth:20.6.0")
-    implementation("com.google.android.gms:play-services-base:18.2.0")
+    implementation("com.google.firebase:firebase-database")
+    implementation("com.google.firebase:firebase-storage")
+    implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-inappmessaging")
 
     // Google Sign-In
     implementation("com.google.android.gms:play-services-auth:21.0.0")
-    implementation(libs.firebase.firestore)
+    implementation("com.google.android.gms:play-services-base:18.2.0")
 
-    // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:32.2.0"))
-    implementation("com.google.firebase:firebase-database")
-    implementation("com.google.firebase:firebase-storage")
+    // Facebook Login (Chỉ cần login, không dùng facebook-android-sdk tổng thể)
+    implementation("com.facebook.android:facebook-login:16.3.0")
 
     // Glide for image loading
     implementation("com.github.bumptech.glide:glide:4.15.1")
-    implementation(libs.firebase.inappmessaging)
-    implementation(libs.swiperefreshlayout)
     annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
+
+    // SwipeRefreshLayout
+    implementation(libs.swiperefreshlayout)
 
     // Testing
     testImplementation(libs.junit)

@@ -54,4 +54,9 @@
         <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
         <item name="android:fontFamily">sans-serif</item>
     </style>
+
+    <style name="RoundedImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
 </resources>

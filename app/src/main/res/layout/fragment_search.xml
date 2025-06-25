@@ -20,12 +20,11 @@
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
+            android:background="#F4DADA"
             android:hint="Tìm món ăn..."
             android:inputType="text"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:background="@drawable/search_background"
-            android:textColor="?android:textColorPrimary"
             android:textColorHint="?android:textColorHint" />
 
         <ImageButton
@@ -39,6 +38,17 @@
             app:tint="?android:textColorPrimary" />
     </LinearLayout>
 
+    <!-- Lịch sử tìm kiếm -->
+    <ListView
+        android:id="@+id/lvSearchHistory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:divider="#CCCCCC"
+        android:dividerHeight="1dp"
+        android:background="#F9F9F9"
+        android:visibility="visible" />
+
     <!-- Kết quả tìm kiếm -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSearchResults"
@@ -47,5 +57,5 @@
         android:layout_weight="1"
         android:layout_marginTop="16dp"
         android:clipToPadding="false"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical" />
 </LinearLayout>

@@ -9,18 +9,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.example.android_lab.R;
 import com.example.android_lab.models.Drink;
 import com.example.android_lab.ui.user.DrinkDetailActivity;
-import com.example.android_lab.ui.user.FoodDetailActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -34,7 +31,7 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
     }
 
     @Override
-    public DrinkViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public DrinkViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_drink, parent, false);
         return new DrinkViewHolder(view);
     }

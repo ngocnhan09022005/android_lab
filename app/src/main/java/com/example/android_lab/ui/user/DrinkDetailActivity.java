@@ -16,8 +16,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.Objects;
 
 public class DrinkDetailActivity extends AppCompatActivity {
-    private ImageView imgDrink;
-    private TextView tvName, tvDescription, tvPrice, tvQuantity;
+    private ImageView imgDrink, imgBackDetail;
+    private TextView tvName, tvDescription, tvPrice;
     private Drink drink;
 
     @Override
@@ -26,10 +26,10 @@ public class DrinkDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_drink_detail);
 
         imgDrink = findViewById(R.id.imgDrinkDetail);
+        imgBackDetail = findViewById(R.id.imgBackDetail);
         tvName = findViewById(R.id.tvDrinkNameDetail);
         tvPrice = findViewById(R.id.tvDrinkPriceDetail);
         tvDescription = findViewById(R.id.tvDrinkDescriptionDetail);
-        tvQuantity = findViewById(R.id.tvDrinkQuantityDetail);
         Button btnAddToCart = findViewById(R.id.btnAddToCartDetail);
 
         drink = (Drink) getIntent().getSerializableExtra("drink");
@@ -62,14 +62,13 @@ public class DrinkDetailActivity extends AppCompatActivity {
                     Toast.makeText(this, "Lỗi đọc giỏ hàng: " + e.getMessage(), Toast.LENGTH_SHORT).show());
         });
 
-
+        imgBackDetail.setOnClickListener(v -> onBackPressed());
     }
 
     private void showDrinkDetails(Drink drink) {
         tvName.setText(drink.getName());
         tvPrice.setText(String.format("%,.0f₫", drink.getPrice()));
         tvDescription.setText(drink.getDescription());
-        tvQuantity.setText(String.valueOf(drink.getQuantity()));
         Glide.with(this)
                 .load(drink.getImageUrl())
                 .placeholder(R.drawable.placeholder_drink)
