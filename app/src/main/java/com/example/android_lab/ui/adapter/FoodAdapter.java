@@ -77,6 +77,9 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
                         food.setQuantity(currentQuantity + 1);
                     } else {
                         food.setQuantity(1);
+                        if (food.getDescription() == null) {
+                            food.setDescription("Không có mô tả");
+                        }
                     }
 
                     cartRef.setValue(food)

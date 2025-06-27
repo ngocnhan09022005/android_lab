@@ -36,8 +36,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Explore Your Favorite Food"
-                    android:textSize="22sp"
+                    android:text="@string/explore_your_favorite_food"
+                    android:textSize="20sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/black" />
 
@@ -45,7 +45,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_bell"
-                    android:contentDescription="Notifications" />
+                    android:contentDescription="@string/notifications" />
             </LinearLayout>
 
             <!-- Banner -->
@@ -54,19 +54,23 @@
                 android:layout_width="0dp"
                 android:layout_height="180dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginHorizontal="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 app:layout_constraintTop_toBottomOf="@id/headerSection"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <!-- Section Title -->
+            <!-- Section Title + 2 nút View Menu có ripple -->
             <LinearLayout
                 android:id="@+id/popularSection"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:orientation="horizontal"
-                android:paddingHorizontal="16dp"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 app:layout_constraintTop_toBottomOf="@id/bannerViewPager"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
@@ -75,27 +79,66 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Popular"
+                    android:text="@string/popular"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="@android:color/black" />
 
-                <TextView
-                    android:id="@+id/tvViewMenuFood"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="View Menu Food"
-                    android:textColor="#4CAF50"
-                    android:textStyle="bold"/>
-                <TextView
-                    android:id="@+id/tvViewMenuDrink"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="View Menu Drink"
-                    android:textColor="#4CAF50"
-                    android:textStyle="bold"
-                    android:layout_marginStart="16dp"/>
+                <!-- Nút View Food -->
+                <FrameLayout
+                    android:id="@+id/btnViewMenuFood"
+                    android:layout_width="80dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_ripple_rectangle"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:focusable="true">
+
+                    <TextView
+                        android:id="@+id/tvViewMenuFood"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/view_food"
+                        android:textAppearance="@style/view_menu"
+                        android:textColor="#000000" />
+                </FrameLayout>
+
+                <!-- Nút View Drink -->
+                <FrameLayout
+                    android:id="@+id/btnViewMenuDrink"
+                    android:layout_width="80dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_ripple_rectangle"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:focusable="true">
+
+                    <TextView
+                        android:id="@+id/tvViewMenuDrink"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/view_drink"
+                        android:textAppearance="@style/view_menu"
+                        android:textColor="#000000" />
+                </FrameLayout>
             </LinearLayout>
+
+
+            <!-- View + TextView (rectangle_5) -->
+            <LinearLayout
+                android:id="@+id/viewMenuContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical"
+                android:gravity="center"
+                app:layout_constraintTop_toBottomOf="@id/popularSection"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
             <!-- Popular Food -->
             <androidx.recyclerview.widget.RecyclerView
@@ -103,12 +146,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:paddingHorizontal="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 android:clipToPadding="false"
                 android:scrollbars="vertical"
-                app:layout_constraintTop_toBottomOf="@id/popularSection"
+                app:layout_constraintTop_toBottomOf="@id/viewMenuContainer"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <!-- Popular Drink -->
             <androidx.recyclerview.widget.RecyclerView
@@ -116,12 +160,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:paddingHorizontal="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 android:clipToPadding="false"
                 android:scrollbars="vertical"
                 app:layout_constraintTop_toBottomOf="@id/rvPopularFood"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <!-- ProgressBar -->
             <ProgressBar
@@ -132,7 +177,8 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

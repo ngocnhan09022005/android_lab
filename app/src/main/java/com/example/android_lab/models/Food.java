@@ -24,6 +24,9 @@ public class Food  implements Serializable, CartItem {
     public String getDescription() {
         return description;
     }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
 
     public int getQuantity() {

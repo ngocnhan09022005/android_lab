@@ -3,6 +3,7 @@ package com.example.android_lab.ui.user;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -25,7 +26,7 @@ public class MenuDrinkActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView rvMenuDrink;
     private ProgressBar progressBar;
-    private Button btnBack;
+    private ImageView btnBack;
 
     private final List<Drink> drinkList = new ArrayList<>();
     private DrinkAdapter drinkAdapter;

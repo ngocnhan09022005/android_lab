@@ -32,7 +32,7 @@
                 android:textStyle="bold"
                 android:textSize="40sp"
                 android:textColor="#EA6D35"
-                android:text="Welcome \nBack" />
+                android:text="@string/welcome_nback" />
 
             <EditText
                 android:id="@+id/editEmail"
@@ -42,7 +42,7 @@
                 android:inputType="textEmailAddress"
                 android:layout_marginRight="32dp"
                 android:layout_marginLeft="32dp"
-                android:hint="Email"
+                android:hint="@string/email"
                 android:textColorHint="#756C6C"
                 android:drawableStart="@drawable/email"
                 android:drawablePadding="16dp"
@@ -60,7 +60,7 @@
                 android:drawableStart="@drawable/password"
                 android:drawablePadding="16dp"
                 android:ems="10"
-                android:hint="Password"
+                android:hint="@string/password"
                 android:layout_marginTop="16dp"
                 android:inputType="textPassword"
                 android:padding="8dp"
@@ -77,7 +77,7 @@
                 android:focusable="true"
                 android:background="@drawable/ripple_circle_combined"
                 android:scaleType="centerInside"
-                android:contentDescription="Đăng nhập"
+                android:contentDescription="@string/dangnhap"
                 app:srcCompat="@drawable/btn_arraw1" />
 
             <LinearLayout
@@ -99,7 +99,7 @@
                     android:drawableEnd="@drawable/facebook"
                     android:drawablePadding="16dp"
                     android:padding="16dp"
-                    android:text="Facebook"
+                    android:text="@string/facebook"
                     android:textColor="#3b608c"
                     android:textSize="12sp"
                     android:textStyle="bold" />
@@ -116,7 +116,7 @@
                     android:drawableEnd="@drawable/google"
                     android:drawablePadding="16dp"
                     android:padding="16dp"
-                    android:text="Google"
+                    android:text="@string/google"
                     android:textColor="#3b608c"
                     android:textSize="12sp"
                     android:textStyle="bold" />
@@ -132,7 +132,7 @@
                 android:textColor="#3B608C"
                 android:textAlignment="center"
                 android:layout_marginTop="8dp"
-                android:text="Are you new user? Register"/>
+                android:text="@string/are_you_new_user_register"/>
 
         </LinearLayout>
     </ScrollView>

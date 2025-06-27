@@ -18,7 +18,7 @@
             android:id="@+id/etFoodName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Tên món ăn"
+            android:hint="@string/t_n_m_n_n"
             android:inputType="textCapWords"
             android:background="@drawable/edittext_background"
             android:textColor="?android:textColorPrimary"
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:background="@drawable/edittext_background"
-            android:hint="Số lượng"
+            android:hint="@string/s_l_ng"
             android:inputType="numberDecimal"
             android:padding="12dp"
             android:textColor="?android:textColorPrimary"
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:background="@drawable/edittext_background"
-            android:hint="Mô tả món ăn"
+            android:hint="@string/m_t_m_n_n"
             android:inputType="textCapWords"
             android:padding="12dp"
             android:textColor="?android:textColorPrimary"
@@ -55,7 +55,7 @@
             android:id="@+id/etFoodPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Giá (VD: 5.99)"
+            android:hint="@string/gi_vd_5_99"
             android:inputType="numberDecimal"
             android:background="@drawable/edittext_background"
             android:textColor="?android:textColorPrimary"
@@ -68,13 +68,13 @@
             android:id="@+id/btnSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Đề xuất" />
+            android:text="@string/xu_t" />
 
         <Button
             android:id="@+id/btnPickImage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Chọn ảnh từ máy"
+            android:text="@string/ch_n_nh_t_m_y"
             android:backgroundTint="?attr/colorPrimary"
             android:textColor="@android:color/white"
             android:layout_marginBottom="12dp" />
@@ -94,7 +94,7 @@
             android:id="@+id/btnAddFood"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Thêm món ăn"
+            android:text="@string/th_m_m_n_n"
             android:backgroundTint="?attr/colorPrimary"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
@@ -103,7 +103,7 @@
             android:id="@+id/btnViewFoodList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Xem danh sách" />
+            android:text="@string/xem_danh_s_ch" />
 
     </LinearLayout>
 </ScrollView>

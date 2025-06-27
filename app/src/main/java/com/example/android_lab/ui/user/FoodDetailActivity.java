@@ -19,8 +19,8 @@ import java.util.Objects;
 
 public class FoodDetailActivity extends AppCompatActivity {
 
-    private ImageView imgFood;
-    private TextView tvName, tvPrice, tvDescription, tvQuantity;
+    private ImageView imgFood, imgBack;
+    private TextView tvName, tvPrice, tvDescription;
     private Food food;
 
     @Override
@@ -32,8 +32,8 @@ public class FoodDetailActivity extends AppCompatActivity {
         tvName = findViewById(R.id.tvFoodNameDetail);
         tvPrice = findViewById(R.id.tvFoodPriceDetail);
         tvDescription = findViewById(R.id.tvFoodDescriptionDetail);
-        tvQuantity = findViewById(R.id.tvFoodQuantityDetail);
         Button btnAddToCart = findViewById(R.id.btnAddToCartDetail);
+        imgBack = findViewById(R.id.imgBackDetail);
 
         food = (Food) getIntent().getSerializableExtra("food");
 
@@ -63,13 +63,14 @@ public class FoodDetailActivity extends AppCompatActivity {
             }).addOnFailureListener(e ->
                     Toast.makeText(this, "Lỗi đọc giỏ hàng: " + e.getMessage(), Toast.LENGTH_SHORT).show());
         });
+
+        imgBack.setOnClickListener(v -> onBackPressed());
     }
 
     private void showFoodDetails(Food food) {
         tvName.setText(food.getName());
         tvPrice.setText(String.format("%,.0f₫", food.getPrice()));
         tvDescription.setText(food.getDescription());
-        tvQuantity.setText(String.valueOf(food.getQuantity()));
 
         Glide.with(this)
                 .load(food.getImageUrl())

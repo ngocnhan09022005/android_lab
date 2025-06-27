@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Chưa có món ăn yêu thích nào"
+        android:text="@string/ch_a_c_m_n_n_y_u_th_ch_n_o"
         android:textSize="18sp"
         android:textColor="@android:color/darker_gray"
         android:textAlignment="center"

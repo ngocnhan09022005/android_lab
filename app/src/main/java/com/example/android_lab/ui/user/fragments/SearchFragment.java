@@ -153,7 +153,7 @@ public class SearchFragment extends Fragment {
 
         List<String> currentHistory = getSearchHistory();
         if (currentHistory.contains(keyword)) currentHistory.remove(keyword);
-        currentHistory.add(0, keyword);
+        currentHistory.add(0, keyword); // thêm mới lên đầu
 
         if (currentHistory.size() > 10) {
             currentHistory = currentHistory.subList(0, 10);

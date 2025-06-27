@@ -30,14 +30,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="33dp"
                 android:src="@drawable/ic_back"
-                app:tint="?attr/colorOnSurface" />
+                 />
         </LinearLayout>
 
         <TextView
             android:id="@+id/tvDrinkNameDetail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tên Thức Uống"
+            android:text="@string/tenthucuong"
             android:gravity="center"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -55,21 +55,22 @@
             android:id="@+id/tvDrinkPriceDetail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Giá"
+            android:textColor="@android:color/holo_red_dark"
+            android:text="@string/gia"
             android:textSize="18sp"
             android:layout_marginTop="4dp" />
         <TextView
             android:id="@+id/tvDrinkDescriptionDetail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Mô tả thức uống"
+            android:text="@string/motathucuong"
             android:textSize="16sp"
             android:layout_marginTop="8dp" />
         <Button
             android:id="@+id/btnAddToCartDetail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Thêm vào giỏ"
+            android:text="@string/th_m"
             android:layout_marginTop="16dp"
             android:backgroundTint="?attr/colorPrimary"
             android:textColor="@android:color/white" />

@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -17,13 +17,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ProfileFragment extends Fragment {
-    private TextView tvUsername;
-    private TextView tvEmail;
-    private Button btnLogout;
-    private FirebaseAuth auth;
-    private FirebaseFirestore db;
+
+    private LinearLayout layoutName, layoutAddress, layoutEmail, layoutPhone, layoutPassword;
+    private TextView btnLogout;
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    private FirebaseAuth auth;
+    private FirebaseFirestore db;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,12 +36,29 @@ public class ProfileFragment extends Fragment {
     }
 
     private void initViews(View view) {
-        tvUsername = view.findViewById(R.id.tvUsername);
-        tvEmail = view.findViewById(R.id.tvEmail);
-        btnLogout = view.findViewById(R.id.btnLogout);
         swipeRefreshLayout = view.findViewById(R.id.swipeRefresh);
+        btnLogout = view.findViewById(R.id.btnLogout);
+
+        layoutName = view.findViewById(R.id.layoutName);
+        layoutAddress = view.findViewById(R.id.layoutAddress);
+        layoutEmail = view.findViewById(R.id.layoutEmail);
+        layoutPhone = view.findViewById(R.id.layoutPhone);
+        layoutPassword = view.findViewById(R.id.layoutPassword);
+
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+
+        // Gán label thủ công
+        setLabel(layoutName, "Họ tên:");
+        setLabel(layoutAddress, "Địa chỉ:");
+        setLabel(layoutEmail, "Email:");
+        setLabel(layoutPhone, "Số điện thoại:");
+        setLabel(layoutPassword, "Mật khẩu:");
+    }
+
+    private void setLabel(LinearLayout layout, String labelText) {
+        TextView label = layout.findViewById(R.id.label);
+        label.setText(labelText);
     }
 
 
@@ -52,6 +69,7 @@ public class ProfileFragment extends Fragment {
     private void setupSwipeToRefresh() {
         swipeRefreshLayout.setOnRefreshListener(this::loadUserProfile);
     }
+
     private void loadUserProfile() {
         swipeRefreshLayout.setRefreshing(true);
         FirebaseUser currentUser = auth.getCurrentUser();
@@ -62,18 +80,15 @@ public class ProfileFragment extends Fragment {
                     .get()
                     .addOnSuccessListener(documentSnapshot -> {
                         if (documentSnapshot.exists()) {
-                            String username = documentSnapshot.getString("name");
-                            String email = documentSnapshot.getString("email");
-
-                            tvUsername.setText(username);
-                            tvEmail.setText(email);
+                            setValue(layoutName, documentSnapshot.getString("name"));
+                            setValue(layoutAddress, documentSnapshot.getString("address"));
+                            setValue(layoutEmail, documentSnapshot.getString("email"));
+                            setValue(layoutPhone, documentSnapshot.getString("phone"));
+                            setValue(layoutPassword, "************"); // Ẩn mật khẩu
                         }
                         swipeRefreshLayout.setRefreshing(false);
                     })
-                    .addOnFailureListener(e -> {
-                        swipeRefreshLayout.setRefreshing(false);
-                        // Optionally show error
-                    });
+                    .addOnFailureListener(e -> swipeRefreshLayout.setRefreshing(false));
         } else {
             swipeRefreshLayout.setRefreshing(false);
         }
@@ -83,6 +98,18 @@ public class ProfileFragment extends Fragment {
         auth.signOut();
         startActivity(new Intent(requireActivity(), LoginActivity.class));
         requireActivity().finish();
+    }
+
+    private void setLabelFromTag(LinearLayout layout) {
+        TextView label = layout.findViewById(R.id.label);
+        if (layout.getTag() != null) {
+            label.setText(layout.getTag().toString());
+        }
+    }
+
+    private void setValue(LinearLayout layout, String value) {
+        TextView valueText = layout.findViewById(R.id.value);
+        valueText.setText(value != null ? value : "Không có");
     }
 
     @Override

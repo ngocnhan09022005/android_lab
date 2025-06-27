@@ -80,14 +80,22 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         holder.itemView.setOnClickListener(v -> {
             Intent intent;
             if (item instanceof Food) {
+                Food food = (Food) item;
+
+                // Nếu thiếu mô tả, gán mặc định để tránh lỗi
+                if (food.getDescription() == null || food.getDescription().isEmpty()) {
+                    food.setDescription("Không có mô tả");
+                }
+
                 intent = new Intent(holder.itemView.getContext(), FoodDetailActivity.class);
-                intent.putExtra("food", (Food) item);
+                intent.putExtra("food", food);
             } else {
                 intent = new Intent(holder.itemView.getContext(), DrinkDetailActivity.class);
                 intent.putExtra("drink", (Drink) item);
             }
             holder.itemView.getContext().startActivity(intent);
         });
+
     }
 
     @Override
