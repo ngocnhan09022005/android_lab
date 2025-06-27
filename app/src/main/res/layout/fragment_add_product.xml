@@ -13,9 +13,8 @@
         android:clipToPadding="false">
 
         <!-- Tên món ăn -->
-
         <EditText
-            android:id="@+id/etFoodName"
+            android:id="@+id/etProductName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/t_n_m_n_n"
@@ -26,9 +25,9 @@
             android:padding="12dp"
             android:layout_marginBottom="12dp" />
 
-        <!-- Giá món ăn -->
+        <!-- Số lượng -->
         <EditText
-            android:id="@+id/etFoodQuantity"
+            android:id="@+id/etProductQuantity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
@@ -39,8 +38,9 @@
             android:textColor="?android:textColorPrimary"
             android:textColorHint="?android:textColorHint" />
 
+        <!-- Mô tả -->
         <EditText
-            android:id="@+id/etFoodDescription"
+            android:id="@+id/etProductDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
@@ -51,8 +51,9 @@
             android:textColor="?android:textColorPrimary"
             android:textColorHint="?android:textColorHint" />
 
+        <!-- Giá -->
         <EditText
-            android:id="@+id/etFoodPrice"
+            android:id="@+id/etProductPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/gi_vd_5_99"
@@ -63,13 +64,37 @@
             android:padding="12dp"
             android:layout_marginBottom="12dp" />
 
-        <!-- Nút chọn ảnh -->
+        <!-- Chọn loại -->
+        <RadioGroup
+            android:id="@+id/rgType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+
+            <RadioButton
+                android:id="@+id/rbFood"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Food"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/rbDrink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Drink"
+                android:layout_marginStart="24dp" />
+        </RadioGroup>
+
+        <!-- Đánh dấu nổi bật -->
         <Switch
             android:id="@+id/btnSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/xu_t" />
 
+        <!-- Chọn ảnh -->
         <Button
             android:id="@+id/btnPickImage"
             android:layout_width="match_parent"
@@ -79,7 +104,7 @@
             android:textColor="@android:color/white"
             android:layout_marginBottom="12dp" />
 
-        <!-- Ảnh xem trước -->
+        <!-- Xem trước ảnh -->
         <ImageView
             android:id="@+id/imgPreview"
             android:layout_width="200dp"
@@ -89,9 +114,9 @@
             android:background="@drawable/image_border"
             android:visibility="gone" />
 
-        <!-- Nút thêm món -->
+        <!-- Thêm món -->
         <Button
-            android:id="@+id/btnAddFood"
+            android:id="@+id/btnAddProduct"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/th_m_m_n_n"
@@ -99,8 +124,9 @@
             android:textColor="@android:color/white"
             android:textStyle="bold" />
 
+        <!-- Xem danh sách -->
         <Button
-            android:id="@+id/btnViewFoodList"
+            android:id="@+id/btnViewProductList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/xem_danh_s_ch" />

@@ -19,13 +19,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.android_lab.R;
-import com.example.android_lab.models.Drink;
-import com.example.android_lab.models.Food;
-import com.example.android_lab.ui.adapter.PopularDrinkAdapter;
-import com.example.android_lab.ui.user.MenuDrinkActivity;
-import com.example.android_lab.ui.user.MenuFoodActivity;
+import com.example.android_lab.models.Product;
 import com.example.android_lab.ui.adapter.BannerAdapter;
-import com.example.android_lab.ui.adapter.PopularFoodAdapter;
+import com.example.android_lab.ui.adapter.PopularProductAdapter;
+import com.example.android_lab.ui.user.MenuProductActivity;
 import com.google.firebase.database.*;
 
 import java.util.ArrayList;
@@ -33,48 +30,42 @@ import java.util.Arrays;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
+
     private SwipeRefreshLayout swipeRefreshLayout;
     private ViewPager2 bannerViewPager;
-    private RecyclerView rvPopularFood, rvPopularDrink;
+    private RecyclerView rvPopularProduct;
     private ProgressBar progressBar;
-    private PopularFoodAdapter popularFoodAdapter;
-    private PopularDrinkAdapter popularDrinkAdapter;
-    private DatabaseReference foodRef, drinkRef;
+    private PopularProductAdapter popularProductAdapter;
+    private DatabaseReference productRef;
     private Handler handler;
     private Runnable bannerRunnable;
-    private TextView viewMenuFood, viewMenuDrink;
+    private TextView viewMenuProduct;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            loadPopularFoods();
-            loadPopularDrinks();
-        });
+        swipeRefreshLayout.setOnRefreshListener(this::loadPopularProducts);
 
         initializeViews(view);
         setupBanner();
-        setupRecyclerViews();
-        loadPopularFoods();
-        loadPopularDrinks();
+        setupRecyclerView();
+        loadPopularProducts();
 
-        viewMenuFood.setOnClickListener(v -> startActivity(new Intent(requireContext(), MenuFoodActivity.class)));
-        viewMenuDrink.setOnClickListener(v -> startActivity(new Intent(requireContext() , MenuDrinkActivity.class)));
+        viewMenuProduct.setOnClickListener(v ->
+                startActivity(new Intent(requireContext(), MenuProductActivity.class)));
+
         return view;
     }
 
     private void initializeViews(View view) {
         bannerViewPager = view.findViewById(R.id.bannerViewPager);
-        rvPopularFood = view.findViewById(R.id.rvPopularFood);
-        rvPopularDrink = view.findViewById(R.id.rvPopularDrink);
+        rvPopularProduct = view.findViewById(R.id.rvPopularProduct); // ID layout cũ có thể giữ nguyên
         progressBar = view.findViewById(R.id.progressBar);
-        viewMenuFood = view.findViewById(R.id.tvViewMenuFood);
-        viewMenuDrink = view.findViewById(R.id.tvViewMenuDrink);
+        viewMenuProduct = view.findViewById(R.id.tvViewMenuFood);
 
-        foodRef = FirebaseDatabase.getInstance().getReference("foods");
-        drinkRef = FirebaseDatabase.getInstance().getReference("drinks");
+        productRef = FirebaseDatabase.getInstance().getReference("products");
         handler = new Handler(Looper.getMainLooper());
     }
 
@@ -103,35 +94,31 @@ public class HomeFragment extends Fragment {
         };
     }
 
-    private void setupRecyclerViews() {
-        // Food
-        popularFoodAdapter = new PopularFoodAdapter(requireContext());
-        rvPopularFood.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-        rvPopularFood.setAdapter(popularFoodAdapter);
-
-        // Drink
-        popularDrinkAdapter = new PopularDrinkAdapter(requireContext());
-        rvPopularDrink.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-        rvPopularDrink.setAdapter(popularDrinkAdapter);
+    private void setupRecyclerView() {
+        popularProductAdapter = new PopularProductAdapter(requireContext());
+        rvPopularProduct.setLayoutManager(
+                new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        );
+        rvPopularProduct.setAdapter(popularProductAdapter);
     }
 
-    private void loadPopularFoods() {
+    private void loadPopularProducts() {
         if (!isAdded()) return;
         progressBar.setVisibility(View.VISIBLE);
 
-        Query query = foodRef.orderByChild("popular").equalTo(true);
+        Query query = productRef.orderByChild("popular").equalTo(true);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<Food> foods = new ArrayList<>();
+                List<Product> productList = new ArrayList<>();
                 for (DataSnapshot child : snapshot.getChildren()) {
-                    Food food = child.getValue(Food.class);
-                    if (food != null) {
-                        food.setId(child.getKey());
-                        foods.add(food);
+                    Product product = child.getValue(Product.class);
+                    if (product != null) {
+                        product.setId(child.getKey());
+                        productList.add(product);
                     }
                 }
-                popularFoodAdapter.updateData(foods);
+                popularProductAdapter.updateData(productList);
                 progressBar.setVisibility(View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -140,32 +127,7 @@ public class HomeFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
                 progressBar.setVisibility(View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
-                Toast.makeText(requireContext(), "Lỗi tải món ăn", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void loadPopularDrinks() {
-        if (!isAdded()) return;
-
-        Query query = drinkRef.orderByChild("popular").equalTo(true);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<Drink> drinks = new ArrayList<>();
-                for (DataSnapshot child : snapshot.getChildren()) {
-                    Drink drink = child.getValue(Drink.class);
-                    if (drink != null) {
-                        drink.setId(child.getKey());
-                        drinks.add(drink);
-                    }
-                }
-                popularDrinkAdapter.updateData(drinks);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(requireContext(), "Lỗi tải đồ uống", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Lỗi tải sản phẩm", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -188,4 +150,3 @@ public class HomeFragment extends Fragment {
         handler.removeCallbacks(bannerRunnable);
     }
 }
-

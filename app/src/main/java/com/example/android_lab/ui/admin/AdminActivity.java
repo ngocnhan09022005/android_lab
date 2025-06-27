@@ -12,7 +12,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import com.example.android_lab.R;
 import com.example.android_lab.ui.auth.LoginActivity;
-import com.example.android_lab.ui.admin.fragments.AddFoodFragment;
+import com.example.android_lab.ui.admin.fragments.AddProductFragment;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class AdminActivity extends AppCompatActivity {
@@ -31,7 +31,7 @@ public class AdminActivity extends AppCompatActivity {
         initWindowInsets();
 
         if (savedInstanceState == null) {
-            loadFragment(new AddFoodFragment());
+            loadFragment(new AddProductFragment());
         }
     }
 
@@ -44,7 +44,7 @@ public class AdminActivity extends AppCompatActivity {
         btnLogout.setOnClickListener(v -> logout());
 
         findViewById(R.id.menuHome).setOnClickListener(v ->
-                loadFragment(new AddFoodFragment())
+                loadFragment(new AddProductFragment())
         );
 
         // TODO: add more menu navigation buttons here if needed

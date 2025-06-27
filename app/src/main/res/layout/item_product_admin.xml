@@ -10,7 +10,7 @@
 
     <!-- Hình món ăn -->
     <ImageView
-        android:id="@+id/imgFood"
+        android:id="@+id/imgAdminProduct"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:scaleType="centerCrop"
@@ -26,7 +26,7 @@
         android:layout_marginStart="12dp">
 
         <TextView
-            android:id="@+id/tvFoodName"
+            android:id="@+id/tvAdminProductName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tên món ăn"
@@ -35,7 +35,7 @@
             android:textColor="?android:textColorPrimary" />
 
         <TextView
-            android:id="@+id/tvFoodPrice"
+            android:id="@+id/tvAdminProductPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="7.000đ"
@@ -43,17 +43,4 @@
             android:textStyle="bold"
             android:textSize="16sp" />
     </LinearLayout>
-
-    <!-- Nút Thêm vào giỏ -->
-    <Button
-        android:id="@+id/btnAddToCart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Thêm"
-        android:textSize="12sp"
-        android:backgroundTint="?attr/colorPrimary"
-        android:textColor="@android:color/white"
-        android:paddingHorizontal="12dp"
-        android:minHeight="36dp" />
-
 </LinearLayout>

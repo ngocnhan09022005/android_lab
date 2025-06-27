@@ -1,38 +1,33 @@
 package com.example.android_lab.ui.user.fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.Toast;
+import android.view.*;
+import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.android_lab.R;
-import com.example.android_lab.models.Food;
-import com.example.android_lab.ui.adapter.FoodAdapter;
-import com.google.firebase.database.*;
-import java.util.ArrayList;
-import java.util.List;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
+import com.example.android_lab.R;
+import com.example.android_lab.models.Product;
+import com.example.android_lab.ui.adapter.ProductAdapter;
+import com.google.firebase.database.*;
+
+import java.util.*;
 
 public class SearchFragment extends Fragment {
+
     private EditText etSearch;
     private ImageButton btnSearch;
     private RecyclerView rvSearchResults;
-    private FoodAdapter foodAdapter;
-    private List<Food> foodList;
-    private DatabaseReference foodsRef, drinksRef;
+    private ProductAdapter productAdapter;
+    private List<Product> productList;
+    private DatabaseReference productsRef;
     private Handler searchHandler;
     private static final long SEARCH_DELAY = 500;
 
@@ -63,10 +58,8 @@ public class SearchFragment extends Fragment {
         rvSearchResults = view.findViewById(R.id.rvSearchResults);
         lvSearchHistory = view.findViewById(R.id.lvSearchHistory);
 
-        foodList = new ArrayList<>();
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
-        foodsRef = dbRef.child("foods");
-        drinksRef = dbRef.child("drinks");
+        productList = new ArrayList<>();
+        productsRef = FirebaseDatabase.getInstance().getReference("products");
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         historyList = new ArrayList<>(getSearchHistory());
@@ -80,22 +73,22 @@ public class SearchFragment extends Fragment {
         });
     }
 
-
     private void setupRecyclerView() {
-        foodAdapter = new FoodAdapter(requireContext(), foodList);
+        productAdapter = new ProductAdapter(requireContext(), productList);
         rvSearchResults.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-        rvSearchResults.setAdapter(foodAdapter);
+        rvSearchResults.setAdapter(productAdapter);
     }
 
     private void setupSearchView() {
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void afterTextChanged(Editable s) {}
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 searchHandler.removeCallbacksAndMessages(null);
                 searchHandler.postDelayed(() -> performSearch(s.toString().trim()), SEARCH_DELAY);
             }
-            @Override public void afterTextChanged(Editable s) {}
         });
 
         btnSearch.setOnClickListener(v -> performSearch(etSearch.getText().toString().trim()));
@@ -103,46 +96,33 @@ public class SearchFragment extends Fragment {
 
     private void performSearch(String queryText) {
         if (queryText.isEmpty()) {
-            foodList.clear();
-            foodAdapter.notifyDataSetChanged();
+            productList.clear();
+            productAdapter.notifyDataSetChanged();
             return;
         }
 
-        saveSearchHistory(queryText); // Lưu từ khóa mới
-
-        lvSearchHistory.setVisibility(View.GONE); // Ẩn history sau khi tìm
+        saveSearchHistory(queryText);
+        lvSearchHistory.setVisibility(View.GONE);
         rvSearchResults.setVisibility(View.VISIBLE);
 
         String searchKey = queryText.substring(0, 1).toUpperCase() + queryText.substring(1);
-        Query foodQuery = foodsRef.orderByChild("name").startAt(searchKey).endAt(searchKey + "\uf8ff");
-        Query drinkQuery = drinksRef.orderByChild("name").startAt(searchKey).endAt(searchKey + "\uf8ff");
+        Query query = productsRef.orderByChild("name").startAt(searchKey).endAt(searchKey + "\uf8ff");
 
-        foodList.clear();
-
-        foodQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+        productList.clear();
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot data : snapshot.getChildren()) {
-                    Food item = data.getValue(Food.class);
-                    if (item != null) foodList.add(item);
+                    Product product = data.getValue(Product.class);
+                    if (product != null) {
+                        product.setId(data.getKey());
+                        productList.add(product);
+                    }
                 }
-
-                drinkQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot data : snapshot.getChildren()) {
-                            Food item = data.getValue(Food.class);
-                            if (item != null) foodList.add(item);
-                        }
-                        foodAdapter.notifyDataSetChanged();
-                    }
-
-                    @Override public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(getContext(), "Lỗi tải drinks", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                productAdapter.notifyDataSetChanged();
             }
 
             @Override public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Lỗi tải foods", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Lỗi tải sản phẩm", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -152,8 +132,8 @@ public class SearchFragment extends Fragment {
         if (keyword.isEmpty()) return;
 
         List<String> currentHistory = getSearchHistory();
-        if (currentHistory.contains(keyword)) currentHistory.remove(keyword);
-        currentHistory.add(0, keyword); // thêm mới lên đầu
+        currentHistory.remove(keyword); // loại bỏ nếu đã có
+        currentHistory.add(0, keyword); // thêm lên đầu
 
         if (currentHistory.size() > 10) {
             currentHistory = currentHistory.subList(0, 10);
@@ -166,17 +146,13 @@ public class SearchFragment extends Fragment {
     }
 
     private List<String> getSearchHistory() {
-        String historyString = sharedPreferences.getString(HISTORY_KEY, "");
-        List<String> list = new ArrayList<>();
-        if (!historyString.isEmpty()) {
-            String[] items = historyString.split(",");
-            for (String item : items) {
-                list.add(item.trim());
-            }
+        String raw = sharedPreferences.getString(HISTORY_KEY, "");
+        List<String> result = new ArrayList<>();
+        if (!raw.isEmpty()) {
+            Collections.addAll(result, raw.split(","));
         }
-        return list;
+        return result;
     }
-
 
     @Override
     public void onDestroyView() {

@@ -1,4 +1,3 @@
-// CartFragment.java
 package com.example.android_lab.ui.user.fragments;
 
 import android.os.Bundle;
@@ -13,15 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.android_lab.R;
 import com.example.android_lab.models.CartItem;
-import com.example.android_lab.models.Drink;
-import com.example.android_lab.models.Food;
+import com.example.android_lab.models.Product;
 import com.example.android_lab.ui.adapter.CartAdapter;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -61,12 +56,9 @@ public class CartFragment extends Fragment {
                 cartList.clear();
                 for (DataSnapshot child : snapshot.getChildren()) {
                     String type = child.child("type").getValue(String.class);
-                    if ("food".equals(type)) {
-                        Food food = child.getValue(Food.class);
-                        if (food != null) cartList.add(food);
-                    } else if ("drink".equals(type)) {
-                        Drink drink = child.getValue(Drink.class);
-                        if (drink != null) cartList.add(drink);
+                    if ("product".equals(type)) {
+                        Product product = child.getValue(Product.class);
+                        if (product != null) cartList.add(product);
                     }
                 }
                 adapter.notifyDataSetChanged();

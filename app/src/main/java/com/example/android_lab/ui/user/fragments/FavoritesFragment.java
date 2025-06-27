@@ -14,22 +14,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android_lab.R;
-import com.example.android_lab.models.Food;
-import com.example.android_lab.ui.adapter.FoodAdapter;
+import com.example.android_lab.models.Product;
+import com.example.android_lab.ui.adapter.ProductAdapter;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class FavoritesFragment extends Fragment {
+
     private RecyclerView rvFavorites;
     private TextView tvEmptyState;
-    private FoodAdapter foodAdapter;
-    private List<Food> favoritesList;
+    private ProductAdapter productAdapter;
+    private final List<Product> favoriteList = new ArrayList<>();
     private FirebaseFirestore db;
     private FirebaseAuth auth;
     private ListenerRegistration favoritesListener;
@@ -54,20 +53,43 @@ public class FavoritesFragment extends Fragment {
         tvEmptyState = view.findViewById(R.id.tvEmptyState);
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
-        favoritesList = new ArrayList<>();
     }
 
     private void setupRecyclerView() {
-        foodAdapter = new FoodAdapter(requireContext(), favoritesList);
+        productAdapter = new ProductAdapter(requireContext(), favoriteList);
         rvFavorites.setLayoutManager(new LinearLayoutManager(requireContext()));
-        rvFavorites.setAdapter(foodAdapter);
+        rvFavorites.setAdapter(productAdapter);
 
         rvFavorites.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(
-            requireContext(), R.anim.layout_animation_fall_down));
+                requireContext(), R.anim.layout_animation_fall_down));
     }
 
     private void setupFavoritesListener() {
-        Toast.makeText(getContext(), "Tính năng chưa phát triển" ,Toast.LENGTH_SHORT).show();
+        String uid = Objects.requireNonNull(auth.getCurrentUser()).getUid();
+
+        favoritesListener = db.collection("favorites")
+                .document(uid)
+                .collection("items")
+                .addSnapshotListener((value, error) -> {
+                    if (error != null) {
+                        Toast.makeText(getContext(), "Lỗi tải yêu thích", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if (value == null) return;
+
+                    favoriteList.clear();
+                    for (DocumentSnapshot doc : value.getDocuments()) {
+                        Product product = doc.toObject(Product.class);
+                        if (product != null) {
+                            product.setId(doc.getId());
+                            favoriteList.add(product);
+                        }
+                    }
+
+                    productAdapter.notifyDataSetChanged();
+                    tvEmptyState.setVisibility(favoriteList.isEmpty() ? View.VISIBLE : View.GONE);
+                });
     }
 
     @Override

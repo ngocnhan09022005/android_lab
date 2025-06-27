@@ -104,27 +104,6 @@
                         android:textAppearance="@style/view_menu"
                         android:textColor="#000000" />
                 </FrameLayout>
-
-                <!-- Nút View Drink -->
-                <FrameLayout
-                    android:id="@+id/btnViewMenuDrink"
-                    android:layout_width="80dp"
-                    android:layout_height="25dp"
-                    android:layout_marginStart="8dp"
-                    android:background="@drawable/bg_ripple_rectangle"
-                    android:clickable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:focusable="true">
-
-                    <TextView
-                        android:id="@+id/tvViewMenuDrink"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="@string/view_drink"
-                        android:textAppearance="@style/view_menu"
-                        android:textColor="#000000" />
-                </FrameLayout>
             </LinearLayout>
 
 
@@ -142,7 +121,7 @@
 
             <!-- Popular Food -->
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvPopularFood"
+                android:id="@+id/rvPopularProduct"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -151,20 +130,6 @@
                 android:clipToPadding="false"
                 android:scrollbars="vertical"
                 app:layout_constraintTop_toBottomOf="@id/viewMenuContainer"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <!-- Popular Drink -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvPopularDrink"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:clipToPadding="false"
-                android:scrollbars="vertical"
-                app:layout_constraintTop_toBottomOf="@id/rvPopularFood"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 

@@ -52,11 +52,7 @@
         <activity android:name=".ui.user.IntroActivity" android:exported="false" />
         <activity android:name=".ui.auth.LoginActivity" android:exported="false" />
         <activity android:name=".ui.auth.RegisterActivity" android:exported="false" />
-        <activity android:name=".ui.user.MenuFoodActivity" android:exported="false" />
-        <activity android:name=".ui.user.MenuDrinkActivity" android:exported="false" />
-        <activity android:name=".ui.user.FoodDetailActivity" android:exported="false" />
-        <activity android:name=".ui.user.DrinkDetailActivity" android:exported="false" />
-        <activity android:name=".ui.admin.MenuActivity" android:exported="false" />
-
+        <activity android:name=".ui.user.MenuProductActivity" android:exported="false" />
+        <activity android:name=".ui.user.ProductDetailActivity" android:exported="false" />
     </application>
 </manifest>

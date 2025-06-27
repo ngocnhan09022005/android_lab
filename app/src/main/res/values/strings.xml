@@ -32,8 +32,7 @@
     <string name="facebook_app_id">646186338477540</string>
     <string name="facebook_client_token">a07d5b89acdf647d7d1aaa2d3a96a865</string>
     <string name="fb_login_protocol_scheme">fb646186338477540</string>
-    <string name="view_drink">Nước uống</string>
-    <string name="view_food">Món ăn</string>
+    <string name="view_food">Menu</string>
     <string name="popular">Phổ biến</string>
     <string name="notifications">Thông báo</string>
     <string name="explore_your_favorite_food">Khám phá món ăn yêu thích của bạn</string>

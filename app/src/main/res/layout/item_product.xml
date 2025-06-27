@@ -8,16 +8,16 @@
     android:padding="12dp"
     android:elevation="2dp">
 
-    <!-- Hình thức uống -->
+    <!-- Hình món ăn -->
     <ImageView
-        android:id="@+id/imgDrink"
+        android:id="@+id/imgProduct"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:scaleType="centerCrop"
         android:src="@drawable/sample_food"
-        android:contentDescription="Ảnh thức uống" />
+        android:contentDescription="Ảnh sản phẩm" />
 
-    <!-- Thông tin thức uống -->
+    <!-- Thông tin món ăn -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -26,16 +26,16 @@
         android:layout_marginStart="12dp">
 
         <TextView
-            android:id="@+id/tvDrinkName"
+            android:id="@+id/tvProductName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tên thức uống"
+            android:text="Tên sản phẩm"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="?android:textColorPrimary" />
 
         <TextView
-            android:id="@+id/tvDrinkPrice"
+            android:id="@+id/tvProductPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="7.000đ"
