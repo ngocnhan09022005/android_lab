@@ -31,7 +31,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         tvName = findViewById(R.id.tvFoodNameDetail);
         tvPrice = findViewById(R.id.tvFoodPriceDetail);
         tvDescription = findViewById(R.id.tvFoodDescriptionDetail);
-        Button btnAddToCart = findViewById(R.id.btnAddToCartDetail);
+        TextView btnAddToCart = findViewById(R.id.btnAddToCartDetail);
         imgBack = findViewById(R.id.imgBackDetail);
 
         product = (Product) getIntent().getSerializableExtra("product");

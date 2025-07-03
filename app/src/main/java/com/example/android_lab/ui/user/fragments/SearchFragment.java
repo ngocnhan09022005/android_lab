@@ -25,23 +25,20 @@ public class SearchFragment extends Fragment {
     private EditText etSearch;
     private ImageButton btnSearch;
     private RecyclerView rvSearchResults;
+    private ListView lvSearchHistory;
+
     private ProductAdapter productAdapter;
     private List<Product> productList;
-    private DatabaseReference productsRef;
-    private Handler searchHandler;
-    private static final long SEARCH_DELAY = 500;
-
-    private ListView lvSearchHistory;
     private List<String> historyList;
+
     private ArrayAdapter<String> historyAdapter;
     private SharedPreferences sharedPreferences;
     private static final String HISTORY_KEY = "search_history";
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        searchHandler = new Handler();
-    }
+    private final Handler searchHandler = new Handler();
+    private static final long SEARCH_DELAY = 500;
+
+    private DatabaseReference productsRef;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,6 +46,7 @@ public class SearchFragment extends Fragment {
         initViews(view);
         setupRecyclerView();
         setupSearchView();
+        loadSearchHistory();
         return view;
     }
 
@@ -62,13 +60,14 @@ public class SearchFragment extends Fragment {
         productsRef = FirebaseDatabase.getInstance().getReference("products");
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
-        historyList = new ArrayList<>(getSearchHistory());
+        historyList = new ArrayList<>();
         historyAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, historyList);
         lvSearchHistory.setAdapter(historyAdapter);
 
         lvSearchHistory.setOnItemClickListener((parent, v, position, id) -> {
             String keyword = historyList.get(position);
             etSearch.setText(keyword);
+            etSearch.setSelection(keyword.length());
             performSearch(keyword);
         });
     }
@@ -87,28 +86,37 @@ public class SearchFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 searchHandler.removeCallbacksAndMessages(null);
-                searchHandler.postDelayed(() -> performSearch(s.toString().trim()), SEARCH_DELAY);
+
+                String query = s.toString().trim();
+                if (query.isEmpty()) {
+                    rvSearchResults.setVisibility(View.GONE);
+                    lvSearchHistory.setVisibility(View.VISIBLE);
+                } else {
+                    lvSearchHistory.setVisibility(View.GONE);
+                    searchHandler.postDelayed(() -> performSearch(query), SEARCH_DELAY);
+                }
             }
         });
 
-        btnSearch.setOnClickListener(v -> performSearch(etSearch.getText().toString().trim()));
+        btnSearch.setOnClickListener(v -> {
+            String query = etSearch.getText().toString().trim();
+            if (!query.isEmpty()) performSearch(query);
+        });
     }
 
     private void performSearch(String queryText) {
-        if (queryText.isEmpty()) {
-            productList.clear();
-            productAdapter.notifyDataSetChanged();
-            return;
-        }
-
         saveSearchHistory(queryText);
+
         lvSearchHistory.setVisibility(View.GONE);
         rvSearchResults.setVisibility(View.VISIBLE);
+        productList.clear();
+        productAdapter.notifyDataSetChanged();
 
         String searchKey = queryText.substring(0, 1).toUpperCase() + queryText.substring(1);
-        Query query = productsRef.orderByChild("name").startAt(searchKey).endAt(searchKey + "\uf8ff");
+        Query query = productsRef.orderByChild("name")
+                .startAt(searchKey)
+                .endAt(searchKey + "\uf8ff");
 
-        productList.clear();
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot data : snapshot.getChildren()) {
@@ -131,27 +139,28 @@ public class SearchFragment extends Fragment {
         keyword = keyword.trim();
         if (keyword.isEmpty()) return;
 
-        List<String> currentHistory = getSearchHistory();
-        currentHistory.remove(keyword); // loại bỏ nếu đã có
-        currentHistory.add(0, keyword); // thêm lên đầu
+        List<String> current = new ArrayList<>(getSearchHistory());
+        current.remove(keyword);
+        current.add(0, keyword);
+        if (current.size() > 10) current = current.subList(0, 10);
 
-        if (currentHistory.size() > 10) {
-            currentHistory = currentHistory.subList(0, 10);
-        }
-
-        sharedPreferences.edit().putString(HISTORY_KEY, String.join(",", currentHistory)).apply();
+        sharedPreferences.edit().putString(HISTORY_KEY, String.join(",", current)).apply();
         historyList.clear();
-        historyList.addAll(currentHistory);
+        historyList.addAll(current);
         historyAdapter.notifyDataSetChanged();
     }
 
     private List<String> getSearchHistory() {
         String raw = sharedPreferences.getString(HISTORY_KEY, "");
-        List<String> result = new ArrayList<>();
-        if (!raw.isEmpty()) {
-            Collections.addAll(result, raw.split(","));
-        }
-        return result;
+        if (raw.isEmpty()) return new ArrayList<>();
+        return new ArrayList<>(Arrays.asList(raw.split(",")));
+    }
+
+    private void loadSearchHistory() {
+        historyList.clear();
+        historyList.addAll(getSearchHistory());
+        historyAdapter.notifyDataSetChanged();
+        lvSearchHistory.setVisibility(View.VISIBLE);
     }
 
     @Override

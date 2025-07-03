@@ -103,7 +103,7 @@ public class AddProductFragment extends Fragment {
         String name = etName.getText().toString().trim();
         String priceStr = etPrice.getText().toString().trim();
         String description = etDescription.getText().toString().trim();
-        String type = rbFood.isChecked() ? "food" : "drink";
+        String typee = rbFood.isChecked() ? "food" : "drink";
         boolean isPopular = btnSwitch.isChecked(); // vẫn giữ như cũ
 
         boolean switchValue = btnSwitch.isChecked();
@@ -124,7 +124,7 @@ public class AddProductFragment extends Fragment {
             return;
         }
 
-        Product product = new Product(productId, name, price, "", isPopular, description, quantityStr, type);
+        Product product = new Product(productId, name, price, "", isPopular, description, quantityStr, typee);
 
         ImageUploader.uploadImageProduct(imageUri, productId, new ImageUploader.UploadCallback() {
             @Override

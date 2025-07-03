@@ -1,5 +1,6 @@
 package com.example.android_lab.ui.user.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.example.android_lab.R;
 import com.example.android_lab.models.CartItem;
 import com.example.android_lab.models.Product;
 import com.example.android_lab.ui.adapter.CartAdapter;
+import com.example.android_lab.ui.user.PaymentActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.*;
 
@@ -25,7 +27,7 @@ public class CartFragment extends Fragment {
 
     private CartAdapter adapter;
     private final List<CartItem> cartList = new ArrayList<>();
-    private TextView tvTotal;
+    private TextView tvTotal,btnProceed;
 
     public CartFragment() {}
 
@@ -36,13 +38,17 @@ public class CartFragment extends Fragment {
 
         RecyclerView rvCart = view.findViewById(R.id.rvCart);
         tvTotal = view.findViewById(R.id.tvTotal);
+        btnProceed = view.findViewById(R.id.btnProceed);
         rvCart.setLayoutManager(new LinearLayoutManager(getContext()));
-
         adapter = new CartAdapter(cartList, this::removeItem, this::updateQuantity);
         rvCart.setAdapter(adapter);
-
         loadCartDataFirebase();
-
+        btnProceed.setOnClickListener(v -> {
+            double total = calculateTotal(); // lấy từ giỏ hàng
+            Intent intent = new Intent(getContext(), PaymentActivity.class);
+            intent.putExtra("amount", total);
+            startActivity(intent);
+        });
         return view;
     }
 
@@ -72,12 +78,13 @@ public class CartFragment extends Fragment {
         });
     }
 
-    private void calculateTotal() {
+    private double calculateTotal() {
         double total = 0;
         for (CartItem item : cartList) {
             total += item.getPrice() * item.getQuantity();
         }
         tvTotal.setText(String.format("%,.0f₫", total));
+        return total;
     }
 
     private void removeItem(CartItem item) {

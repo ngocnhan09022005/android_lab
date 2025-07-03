@@ -57,9 +57,9 @@ public class PopularProductAdapter extends RecyclerView.Adapter<PopularProductAd
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
-            imgProduct = itemView.findViewById(R.id.imgFood);
-            tvName = itemView.findViewById(R.id.tvFoodName);
-            tvPrice = itemView.findViewById(R.id.tvFoodPrice);
+            imgProduct = itemView.findViewById(R.id.imgProduct);
+            tvName = itemView.findViewById(R.id.tvProductName);
+            tvPrice = itemView.findViewById(R.id.tvProductPrice);
             btnAddToCart = itemView.findViewById(R.id.btnAddToCart);
         }
 
