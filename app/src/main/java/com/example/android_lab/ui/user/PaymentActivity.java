@@ -1,6 +1,7 @@
 package com.example.android_lab.ui.user;
 
 import android.app.DownloadManager;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -10,9 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.bumptech.glide.Glide;
 import com.example.android_lab.R;
 import com.example.android_lab.models.CartItem;
@@ -21,43 +20,41 @@ import com.example.android_lab.services.PaymentApiService;
 import com.example.android_lab.services.PaymentRequest;
 import com.example.android_lab.services.PaymentResponse;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
+import com.google.firebase.database.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
-
+import java.util.*;
+import android.app.ProgressDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PaymentActivity extends AppCompatActivity {
-
+    private ProgressDialog progressDialog;
     private TextView tvAmount, tvNote, tvExpiredAt, btnConfirmPayment;
     private ImageView imgQr, btnBack;
     private Button btnDownloadImage;
     private String qrUrl = "";
     private long expiredAtEpoch = 0;
-
+    private boolean successActivityOpened = false;
     private ArrayList<CartItem> cartItems;
-
-    private final Handler handler = new Handler();
-    private final Runnable countdownRunnable = new Runnable() {
-        @Override
-        public void run() {
-            updateCountdown();
-            handler.postDelayed(this, 1000);
-        }
-    };
+    private Handler handler = new Handler();
+    private DatabaseReference statusRef;
+    private ValueEventListener statusListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Đang xử lý thanh toán...");
+        progressDialog.setCancelable(false);
 
+        initViews();
+        setupListeners();
+        handleIntent();
+    }
+
+    private void initViews() {
         tvAmount = findViewById(R.id.tvAmount);
         tvNote = findViewById(R.id.tvNote);
         imgQr = findViewById(R.id.imgQr);
@@ -65,59 +62,68 @@ public class PaymentActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
         tvExpiredAt = findViewById(R.id.tvExpiredAt);
         btnConfirmPayment = findViewById(R.id.btnProceed);
+        btnDownloadImage.setVisibility(View.GONE);
+    }
 
+    private void setupListeners() {
         btnBack.setOnClickListener(v -> onBackPressed());
         btnDownloadImage.setOnClickListener(v -> downloadQrImage(qrUrl));
-        btnDownloadImage.setVisibility(View.GONE);
+    }
 
+    private void handleIntent() {
         cartItems = (ArrayList<CartItem>) getIntent().getSerializableExtra("cartItems");
         double amount = getIntent().getDoubleExtra("amount", 0);
 
-        // Build contactInfo
         String name = getIntent().getStringExtra("name");
         String phone = getIntent().getStringExtra("phone");
         String address = getIntent().getStringExtra("address");
-        String contactInfo = "Tên: " + name + "\nSĐT: " + phone + "\nĐịa chỉ: " + address;
+        String contactInfo = String.format("Tên: %s\nSĐT: %s\nĐịa chỉ: %s", name, phone, address);
 
-        // Build productListString
-        StringBuilder productListBuilder = new StringBuilder();
-        double total = 0;
+        String productListString = buildProductList();
+        double total = calculateTotal();
+
+        String userId = FirebaseAuth.getInstance().getUid();
+        String orderId = "ORDER_" + System.currentTimeMillis();
+        String note = "Thanh toán đơn hàng " + orderId;
+
+        callN8nApi(userId, orderId, amount, note);
+
+        btnConfirmPayment.setOnClickListener(v -> {
+            if (successActivityOpened) return;
+            btnConfirmPayment.setEnabled(false);
+            progressDialog.show();
+            saveOrderToFirebase(userId, orderId, amount, contactInfo, productListString, total);
+            new Handler().postDelayed(this::goToSuccessAndClearCart, 2000);
+        });
+    }
+
+    private String buildProductList() {
+        StringBuilder builder = new StringBuilder();
         if (cartItems != null) {
             for (CartItem item : cartItems) {
-                productListBuilder.append(item.getName())
+                builder.append(item.getName())
                         .append(" x ").append(item.getQuantity())
                         .append(" - ")
                         .append(String.format("%,.0f₫", item.getPrice() * item.getQuantity()))
                         .append("\n");
+            }
+        }
+        return builder.toString();
+    }
+
+    private double calculateTotal() {
+        double total = 0;
+        if (cartItems != null) {
+            for (CartItem item : cartItems) {
                 total += item.getPrice() * item.getQuantity();
             }
         }
-        String productListString = productListBuilder.toString();
-
-        // Gọi API tạo QR và hiển thị QR, note, amount đúng như cũ
-        String userId = FirebaseAuth.getInstance().getUid();
-        String orderId = "ORDER_" + System.currentTimeMillis();
-        String note = "Thanh toán đơn hàng " + orderId;
-        callN8nApi(userId, orderId, amount, note);
-        // KHÔNG lưu đơn hàng ở đây!
-
-        double finalTotal = total;
-        btnConfirmPayment.setOnClickListener(v -> {
-            // Khi bấm xác nhận mới lưu đơn hàng và chuyển sang màn hình thành công
-            saveOrderToFirebase(userId, orderId, amount, contactInfo, productListString, finalTotal);
-            // Xóa giỏ hàng sau khi xác nhận thanh toán
-            if (userId != null) {
-                DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference("cart").child(userId);
-                cartRef.removeValue();
-            }
-            startActivity(new android.content.Intent(this, PaymentSuccessActivity.class));
-            finish();
-        });
+        return total;
     }
 
-    private void saveOrderToFirebase(String userId, String orderId, double amount, String contactInfo, String productListString, double total) {
+    private void saveOrderToFirebase(String userId, String orderId, double amount, String contactInfo, String productList, double total) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("payments").child(userId).child(orderId);
-        HashMap<String, Object> data = new HashMap<>();
+        Map<String, Object> data = new HashMap<>();
         data.put("orderId", orderId);
         data.put("amount", amount);
         data.put("status", "pending");
@@ -127,7 +133,7 @@ public class PaymentActivity extends AppCompatActivity {
         data.put("phone", getIntent().getStringExtra("phone"));
         data.put("address", getIntent().getStringExtra("address"));
         data.put("contactInfo", contactInfo);
-        data.put("productListString", productListString);
+        data.put("productListString", productList);
         data.put("total", total);
         ref.setValue(data);
     }
@@ -145,16 +151,12 @@ public class PaymentActivity extends AppCompatActivity {
             public void onResponse(Call<PaymentResponse> call, Response<PaymentResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     PaymentResponse res = response.body();
-
                     qrUrl = res.getQrImageUrl();
                     expiredAtEpoch = res.getExpiredAt();
                     btnDownloadImage.setVisibility(View.VISIBLE);
-
                     tvAmount.setText(String.format("%,d₫", res.getAmount()));
                     tvNote.setText(res.getNote());
                     Glide.with(PaymentActivity.this).load(qrUrl).into(imgQr);
-                    // Lắng nghe trạng thái đơn hàng, chỉ chuyển sang thành công khi đã thanh toán
-                    listenOrderStatus(userId, orderId);
                 } else {
                     Toast.makeText(PaymentActivity.this, "❌ Lỗi tạo mã QR", Toast.LENGTH_SHORT).show();
                     expiredAtEpoch = expiredAt;
@@ -173,36 +175,39 @@ public class PaymentActivity extends AppCompatActivity {
         });
     }
 
-    private void listenOrderStatus(String userId, String orderId) {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("payments").child(userId).child(orderId).child("status");
-        ref.addValueEventListener(new com.google.firebase.database.ValueEventListener() {
-            @Override
-            public void onDataChange(@androidx.annotation.NonNull com.google.firebase.database.DataSnapshot snapshot) {
-                String status = snapshot.getValue(String.class);
-                if ("paid".equals(status)) {
-                    goToSuccessAndClearCart();
-                }
-            }
-
-            @Override
-            public void onCancelled(@androidx.annotation.NonNull com.google.firebase.database.DatabaseError error) {}
-        });
-    }
-
     private void goToSuccessAndClearCart() {
+        if (successActivityOpened) return;
+        successActivityOpened = true;
+
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+
         String userId = FirebaseAuth.getInstance().getUid();
         if (userId != null) {
-            DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference("cart").child(userId);
-            cartRef.removeValue();
+            FirebaseDatabase.getInstance().getReference("cart").child(userId).removeValue();
         }
-        startActivity(new android.content.Intent(this, PaymentSuccessActivity.class));
+
+        Toast.makeText(this, "Đơn thanh toán đã được tạo. Vui lòng kiểm tra lịch sử!", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
         finish();
     }
 
+
     private void startCountdown() {
-        handler.removeCallbacks(countdownRunnable); // clear trước
+        handler.removeCallbacks(countdownRunnable);
         handler.post(countdownRunnable);
     }
+
+    private Runnable countdownRunnable = new Runnable() {
+        @Override
+        public void run() {
+            updateCountdown();
+            handler.postDelayed(this, 1000);
+        }
+    };
 
     private void updateCountdown() {
         long now = System.currentTimeMillis() / 1000;
@@ -211,7 +216,8 @@ public class PaymentActivity extends AppCompatActivity {
         if (secondsLeft <= 0) {
             tvExpiredAt.setText("⛔ QR đã hết hạn");
             btnDownloadImage.setEnabled(false);
-            imgQr.setAlpha(0.5f); // làm mờ QR khi hết hạn
+            imgQr.setAlpha(0.5f);
+            btnConfirmPayment.setEnabled(false);
             handler.removeCallbacks(countdownRunnable);
             return;
         }
@@ -243,7 +249,7 @@ public class PaymentActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        handler.removeCallbacks(countdownRunnable); // tránh chạy ngầm
+        handler.removeCallbacks(countdownRunnable);
     }
 
     @Override
@@ -251,6 +257,14 @@ public class PaymentActivity extends AppCompatActivity {
         super.onResume();
         if (expiredAtEpoch > System.currentTimeMillis() / 1000) {
             handler.post(countdownRunnable);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (statusRef != null && statusListener != null) {
+            statusRef.removeEventListener(statusListener);
         }
     }
 }

@@ -8,43 +8,56 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ToggleButton;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.android_lab.R;
 import com.example.android_lab.models.Product;
 import com.example.android_lab.ui.adapter.ProductAdapter;
-import com.google.firebase.database.*;
-import java.util.*;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MenuFragment extends Fragment {
     private EditText etSearch;
     private ImageButton btnSearch;
+    private ToggleButton btnFilterFood, btnFilterDrink;
     private RecyclerView rvMenu;
     private ProductAdapter productAdapter;
-    private List<Product> allProducts; // Danh sách tất cả sản phẩm
-    private List<Product> filteredProducts; // Danh sách hiển thị
+    private List<Product> allProducts;
+    private List<Product> filteredProducts;
     private DatabaseReference productsRef;
-    private boolean isLoaded = false; // Biến kiểm tra xem sản phẩm đã được tải hay chưa
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_menu, container, false);
         initViews(view);
         setupRecyclerView();
-        if (!isLoaded) {
-            loadAllProducts();
-            isLoaded = true;
-        }
-        setupSearchView();
+        setupSearchAndFilter();
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadAllProducts(); // luôn load lại mỗi khi quay về
     }
 
     private void initViews(View view) {
         etSearch = view.findViewById(R.id.etSearch);
         btnSearch = view.findViewById(R.id.btnSearch);
+        btnFilterFood = view.findViewById(R.id.btnFilterFood);
+        btnFilterDrink = view.findViewById(R.id.btnFilterDrink);
         rvMenu = view.findViewById(R.id.rvMenuFood);
         allProducts = new ArrayList<>();
         filteredProducts = new ArrayList<>();
@@ -69,11 +82,9 @@ public class MenuFragment extends Fragment {
                         allProducts.add(product);
                     }
                 }
-                // Hiển thị toàn bộ sản phẩm ban đầu
-                filteredProducts.clear();
-                filteredProducts.addAll(allProducts);
-                productAdapter.notifyDataSetChanged();
+                applyFilters(); // lọc lại theo toggle/search hiện tại
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getContext(), "Lỗi tải sản phẩm", Toast.LENGTH_SHORT).show();
@@ -81,29 +92,33 @@ public class MenuFragment extends Fragment {
         });
     }
 
-    private void setupSearchView() {
+    private void setupSearchAndFilter() {
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void afterTextChanged(Editable s) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filterProducts(s.toString().trim());
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                applyFilters();
             }
         });
-        btnSearch.setOnClickListener(v -> {
-            filterProducts(etSearch.getText().toString().trim());
-        });
+
+        btnSearch.setOnClickListener(v -> applyFilters());
+        btnFilterFood.setOnClickListener(v -> applyFilters());
+        btnFilterDrink.setOnClickListener(v -> applyFilters());
     }
 
-    private void filterProducts(String query) {
+    private void applyFilters() {
+        String query = etSearch.getText().toString().trim().toLowerCase();
+        boolean filterFood = btnFilterFood.isChecked();
+        boolean filterDrink = btnFilterDrink.isChecked();
+
         filteredProducts.clear();
-        if (query.isEmpty()) {
-            filteredProducts.addAll(allProducts);
-        } else {
-            for (Product p : allProducts) {
-                if (p.getName() != null && p.getName().toLowerCase().contains(query.toLowerCase())) {
-                    filteredProducts.add(p);
-                }
+        for (Product p : allProducts) {
+            boolean matchesSearch = p.getName() != null && p.getName().toLowerCase().contains(query);
+            boolean matchesType = (!filterFood && !filterDrink) ||
+                    (filterFood && "food".equalsIgnoreCase(p.getType())) ||
+                    (filterDrink && "drink".equalsIgnoreCase(p.getType()));
+            if (matchesSearch && matchesType) {
+                filteredProducts.add(p);
             }
         }
         productAdapter.notifyDataSetChanged();

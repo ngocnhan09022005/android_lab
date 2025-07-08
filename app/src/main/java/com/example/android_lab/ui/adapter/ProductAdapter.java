@@ -2,27 +2,18 @@ package com.example.android_lab.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.PopupMenu;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.view.*;
+import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.example.android_lab.R;
 import com.example.android_lab.models.Product;
+import com.example.android_lab.ui.admin.ProductDetailAdminActivity;
 import com.example.android_lab.ui.user.ProductDetailActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.*;
-
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
@@ -33,7 +24,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     private final boolean isAdmin;
 
     public ProductAdapter(Context context, List<Product> productList) {
-        this(context, productList, true); // Luôn là admin cho fragment CRUD
+        this(context, productList, true);
     }
 
     public ProductAdapter(Context context, List<Product> productList, boolean isAdmin) {
@@ -53,7 +44,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public ProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         int layout = isAdmin ? R.layout.item_product_admin : R.layout.item_product;
         View view = LayoutInflater.from(context).inflate(layout, parent, false);
-        return new ProductViewHolder(view, actionListener);
+        return new ProductViewHolder(view, actionListener, isAdmin);
     }
 
     @Override
@@ -71,17 +62,19 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         TextView tvName, tvPrice;
         Button btnAddToCart;
         ImageView btnMenu;
-        private OnProductActionListener actionListener;
+        private final boolean isAdmin;
+        private final OnProductActionListener actionListener;
 
-        public ProductViewHolder(View itemView, OnProductActionListener actionListener) {
+        public ProductViewHolder(View itemView, OnProductActionListener actionListener, boolean isAdmin) {
             super(itemView);
-            // Sử dụng id layout admin nếu có
+            this.actionListener = actionListener;
+            this.isAdmin = isAdmin;
+
             imgProduct = itemView.findViewById(R.id.imgProduct) != null ? itemView.findViewById(R.id.imgProduct) : itemView.findViewById(R.id.imgAdminProduct);
             tvName = itemView.findViewById(R.id.tvProductName) != null ? itemView.findViewById(R.id.tvProductName) : itemView.findViewById(R.id.tvAdminProductName);
             tvPrice = itemView.findViewById(R.id.tvProductPrice) != null ? itemView.findViewById(R.id.tvProductPrice) : itemView.findViewById(R.id.tvAdminProductPrice);
-            btnAddToCart = itemView.findViewById(R.id.btnAddToCart); // Có thể null với layout admin
+            btnAddToCart = itemView.findViewById(R.id.btnAddToCart); // chỉ có ở layout user
             btnMenu = itemView.findViewById(R.id.btnMenu);
-            this.actionListener = actionListener;
         }
 
         public void bind(Context context, Product product, DatabaseReference cartBaseRef) {
@@ -92,15 +85,25 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                     .placeholder(R.drawable.placeholder_food)
                     .error(R.drawable.placeholder_food)
                     .into(imgProduct);
-            if (btnAddToCart != null) {
+
+            // Người dùng: xử lý thêm giỏ
+            if (!isAdmin && btnAddToCart != null) {
                 btnAddToCart.setOnClickListener(v -> addToCart(context, cartBaseRef, product));
             }
+
             itemView.setOnClickListener(v -> {
-                Intent intent = new Intent(context, ProductDetailActivity.class);
+                Intent intent;
+                if (isAdmin) {
+                    intent = new Intent(context, ProductDetailAdminActivity.class);
+                } else {
+                    intent = new Intent(context, ProductDetailActivity.class);
+                }
                 intent.putExtra("product", product);
                 context.startActivity(intent);
             });
-            if (btnMenu != null) {
+
+            // Admin: hiển thị popup menu
+            if (isAdmin && btnMenu != null) {
                 btnMenu.setOnClickListener(v -> {
                     PopupMenu popup = new PopupMenu(context, btnMenu);
                     popup.getMenuInflater().inflate(R.menu.menu_product_actions, popup.getMenu());
@@ -140,7 +143,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
                 product.setQuantity(currentQty + 1);
                 if (product.getDescription() == null) product.setDescription("Không có mô tả");
-                product.setType("product"); // Luôn set type là 'product' khi thêm vào giỏ
+                product.setType("product");
 
                 cartRef.setValue(product)
                         .addOnSuccessListener(unused ->
@@ -156,7 +159,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         }
     }
 
-    // Interface callback cho admin
     public interface OnProductActionListener {
         void onEditProduct(Product product);
         void onDeleteProduct(Product product);

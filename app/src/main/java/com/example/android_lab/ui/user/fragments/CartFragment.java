@@ -27,7 +27,10 @@ public class CartFragment extends Fragment {
 
     private CartAdapter adapter;
     private final List<CartItem> cartList = new ArrayList<>();
-    private TextView tvTotal,btnProceed;
+    private TextView tvTotal, btnProceed;
+
+    private DatabaseReference cartRef;
+    private ValueEventListener cartListener;
 
     public CartFragment() {}
 
@@ -39,28 +42,36 @@ public class CartFragment extends Fragment {
         RecyclerView rvCart = view.findViewById(R.id.rvCart);
         tvTotal = view.findViewById(R.id.tvTotal);
         btnProceed = view.findViewById(R.id.btnProceed);
+
         rvCart.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new CartAdapter(cartList, this::removeItem, this::updateQuantity);
         rvCart.setAdapter(adapter);
-        loadCartDataFirebase();
+
+        setupListeners();
+        return view;
+    }
+
+    private void setupListeners() {
         btnProceed.setOnClickListener(v -> {
             double total = calculateTotal();
             Intent intent = new Intent(getContext(), ConfirmOrderActivity.class);
             intent.putExtra("amount", total);
-            // Truyền danh sách sản phẩm sang ConfirmOrderActivity
             intent.putExtra("cartItems", new ArrayList<>(cartList));
             startActivity(intent);
         });
-        return view;
     }
 
     private void loadCartDataFirebase() {
-        String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-        DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference("cart").child(uid);
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) return;
 
-        cartRef.addValueEventListener(new ValueEventListener() {
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        cartRef = FirebaseDatabase.getInstance().getReference("cart").child(uid);
+
+        cartListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!isAdded()) return;
+
                 cartList.clear();
                 for (DataSnapshot child : snapshot.getChildren()) {
                     String type = child.child("type").getValue(String.class);
@@ -75,9 +86,12 @@ public class CartFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Lỗi tải giỏ hàng", Toast.LENGTH_SHORT).show();
+                if (getContext() != null)
+                    Toast.makeText(getContext(), "Lỗi tải giỏ hàng", Toast.LENGTH_SHORT).show();
             }
-        });
+        };
+
+        cartRef.addValueEventListener(cartListener);
     }
 
     private double calculateTotal() {
@@ -90,18 +104,34 @@ public class CartFragment extends Fragment {
     }
 
     private void removeItem(CartItem item) {
-        String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) return;
+
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseDatabase.getInstance().getReference("cart").child(uid).child(item.getId()).removeValue();
     }
 
     private void updateQuantity(CartItem item, int newQty) {
-        String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-        DatabaseReference ref = FirebaseDatabase.getInstance()
-                .getReference("cart").child(uid).child(item.getId());
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) return;
+
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("cart").child(uid).child(item.getId());
 
         ref.child("quantity").setValue(newQty)
                 .addOnSuccessListener(unused -> calculateTotal())
                 .addOnFailureListener(e -> Toast.makeText(getContext(), "Lỗi cập nhật số lượng", Toast.LENGTH_SHORT).show());
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        loadCartDataFirebase();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (cartRef != null && cartListener != null) {
+            cartRef.removeEventListener(cartListener);
+        }
+    }
 }

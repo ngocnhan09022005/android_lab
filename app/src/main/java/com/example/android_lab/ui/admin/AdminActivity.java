@@ -37,7 +37,7 @@ public class AdminActivity extends AppCompatActivity {
         initWindowInsets();
 
         if (savedInstanceState == null) {
-            loadFragment(new ProductCrudFragment());
+            loadFragment(new DashboardFragment());
         }
     }
 

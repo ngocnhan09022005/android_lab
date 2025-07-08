@@ -1,70 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="24dp"
-    android:gravity="center_horizontal"
     android:background="@color/white">
 
-    <TextView
-        android:id="@+id/tvConfirmTitle"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Xác nhận thông tin liên hệ"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="24dp" />
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal">
 
-    <TextView
-        android:id="@+id/tvNameLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Tên:"
-        android:textSize="16sp" />
-    <EditText
-        android:id="@+id/etName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Nhập tên"
-        android:inputType="textPersonName"
-        android:layout_marginBottom="12dp" />
+        <TextView
+            android:id="@+id/tvConfirmTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Xác nhận thông tin liên hệ"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#222222"
+            android:layout_marginBottom="24dp"
+            android:fontFamily="sans-serif-medium" />
 
-    <TextView
-        android:id="@+id/tvPhoneLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Số điện thoại:"
-        android:textSize="16sp" />
-    <EditText
-        android:id="@+id/etPhone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Nhập số điện thoại"
-        android:inputType="phone"
-        android:layout_marginBottom="12dp" />
+        <!-- Tên -->
+        <TextView
+            android:id="@+id/tvNameLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tên:"
+            android:textSize="15sp"
+            android:textColor="#555555"
+            android:layout_marginBottom="4dp" />
 
-    <TextView
-        android:id="@+id/tvAddressLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Địa chỉ:"
-        android:textSize="16sp" />
-    <EditText
-        android:id="@+id/etAddress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Nhập địa chỉ"
-        android:inputType="textPostalAddress"
-        android:layout_marginBottom="24dp" />
+        <EditText
+            android:id="@+id/etName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nhập tên"
+            android:background="@drawable/bg_edittext"
+            android:padding="12dp"
+            android:textSize="15sp"
+            android:layout_marginBottom="16dp"
+            android:inputType="textPersonName" />
 
-    <Button
-        android:id="@+id/btnConfirmOrder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Xác nhận thông tin"
-        android:textAllCaps="false"
-        android:backgroundTint="@color/md_theme_light_primary"
-        android:textColor="@android:color/white"
-        android:textSize="16sp" />
-</LinearLayout>
+        <!-- SĐT -->
+        <TextView
+            android:id="@+id/tvPhoneLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Số điện thoại:"
+            android:textSize="15sp"
+            android:textColor="#555555"
+            android:layout_marginBottom="4dp" />
+
+        <EditText
+            android:id="@+id/etPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nhập số điện thoại"
+            android:background="@drawable/bg_edittext"
+            android:padding="12dp"
+            android:textSize="15sp"
+            android:layout_marginBottom="16dp"
+            android:inputType="phone" />
+
+        <!-- Địa chỉ -->
+        <TextView
+            android:id="@+id/tvAddressLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Địa chỉ:"
+            android:textSize="15sp"
+            android:textColor="#555555"
+            android:layout_marginBottom="4dp" />
+
+        <EditText
+            android:id="@+id/etAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nhập địa chỉ"
+            android:background="@drawable/bg_edittext"
+            android:padding="12dp"
+            android:textSize="15sp"
+            android:layout_marginBottom="24dp"
+            android:inputType="textPostalAddress" />
+
+        <!-- Nút xác nhận -->
+        <Button
+            android:id="@+id/btnConfirmOrder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Xác nhận thông tin"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/md_theme_light_primary"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:padding="12dp" />
+
+    </LinearLayout>
+</ScrollView>

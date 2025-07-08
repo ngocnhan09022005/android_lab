@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -23,9 +25,9 @@ public class ProfileFragment extends Fragment {
     private TextView btnUpdateProfile;
     private TextView btnChangePassword;
     private SwipeRefreshLayout swipeRefreshLayout;
-
     private FirebaseAuth auth;
     private FirebaseFirestore db;
+    private boolean isFirstLoad = true;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -87,26 +89,34 @@ public class ProfileFragment extends Fragment {
     private void loadUserProfile() {
         swipeRefreshLayout.setRefreshing(true);
         FirebaseUser currentUser = auth.getCurrentUser();
-        if (currentUser != null) {
-            String userId = currentUser.getUid();
-            db.collection("users")
-                    .document(userId)
-                    .get()
-                    .addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot.exists()) {
-                            setValue(layoutName, documentSnapshot.getString("name"));
-                            setValue(layoutAddress, documentSnapshot.getString("address"));
-                            setValue(layoutEmail, documentSnapshot.getString("email"));
-                            setValue(layoutPhone, documentSnapshot.getString("phone"));
-                            setValue(layoutPassword, "************"); // Ẩn mật khẩu
-                        }
-                        swipeRefreshLayout.setRefreshing(false);
-                    })
-                    .addOnFailureListener(e -> swipeRefreshLayout.setRefreshing(false));
-        } else {
+
+        if (currentUser == null) {
             swipeRefreshLayout.setRefreshing(false);
+            showLoginRequired();
+            return;
         }
+
+        db.collection("users")
+                .document(currentUser.getUid())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        setValue(layoutName, documentSnapshot.getString("name"));
+                        setValue(layoutAddress, documentSnapshot.getString("address"));
+                        setValue(layoutEmail, documentSnapshot.getString("email"));
+                        setValue(layoutPhone, documentSnapshot.getString("phone"));
+                        setValue(layoutPassword, "************");
+                    } else {
+                        Toast.makeText(getContext(), "Không tìm thấy thông tin người dùng", Toast.LENGTH_SHORT).show();
+                    }
+                    swipeRefreshLayout.setRefreshing(false);
+                })
+                .addOnFailureListener(e -> {
+                    swipeRefreshLayout.setRefreshing(false);
+                    Toast.makeText(getContext(), "Lỗi tải hồ sơ: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
+
 
     private void logout() {
         auth.signOut();
@@ -277,9 +287,19 @@ public class ProfileFragment extends Fragment {
             .addOnFailureListener(e -> android.widget.Toast.makeText(getContext(), "Mật khẩu hiện tại không đúng", android.widget.Toast.LENGTH_SHORT).show());
     }
 
+    private void showLoginRequired() {
+        Toast.makeText(getContext(), "Bạn chưa đăng nhập", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(requireActivity(), LoginActivity.class));
+        requireActivity().finish();
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        loadUserProfile();
+        if (!isFirstLoad) {
+            loadUserProfile();
+        } else {
+            isFirstLoad = false;
+        }
     }
 }

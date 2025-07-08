@@ -60,7 +60,27 @@ public class MainActivity extends AppCompatActivity {
         initViews();
         initFragments();
         setupMenuClickListeners();
-        loadFragment(homeFragment, 0);
+// ✅ Thay load mặc định bằng xử lý điều hướng theo Intent
+        String navigateTo = getIntent().getStringExtra("navigateTo");
+
+        switch (navigateTo != null ? navigateTo : "") {
+            case "cart":
+                updateMenuIcons(2);
+                loadFragment(cartFragment, 2);
+                break;
+            case "paymentHistory":
+                updateMenuIcons(3);
+                loadFragment(paymentHistoryFragment, 3);
+                break;
+            case "profile":
+                updateMenuIcons(4);
+                loadFragment(profileFragment, 4);
+                break;
+            default:
+                updateMenuIcons(0);
+                loadFragment(homeFragment, 0);
+                break;
+        }
 
         if (savedInstanceState != null) {
             currentMenuIndex = savedInstanceState.getInt("currentMenuIndex", 0);

@@ -14,6 +14,7 @@ import com.example.android_lab.R;
 import com.example.android_lab.models.PaymentHistoryItem;
 import com.example.android_lab.ui.adapter.PaymentHistoryAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,8 @@ public class PaymentHistoryFragment extends Fragment {
     private TextView tvEmptyState;
     private PaymentHistoryAdapter adapter;
     private final List<PaymentHistoryItem> historyList = new ArrayList<>();
+    private ValueEventListener paymentListener;
+    private DatabaseReference paymentRef;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,32 +37,57 @@ public class PaymentHistoryFragment extends Fragment {
         rvHistory.setLayoutManager(new LinearLayoutManager(getContext()));
         rvHistory.setAdapter(adapter);
         adapter.setOnItemClickListener(item -> {
-            android.content.Intent intent = new android.content.Intent(getContext(), com.example.android_lab.ui.user.OrderDetailActivity.class);
-            intent.putExtra("order", item);
-            startActivity(intent);
+            if (isAdded() && getContext() != null) {
+                android.content.Intent intent = new android.content.Intent(getContext(), com.example.android_lab.ui.user.OrderDetailActivity.class);
+                intent.putExtra("order", item);
+                startActivity(intent);
+            }
         });
         loadPaymentHistory();
         return view;
     }
 
     private void loadPaymentHistory() {
-        String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("payments").child(uid);
-        ref.addValueEventListener(new ValueEventListener() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) return;
+
+        String uid = currentUser.getUid();
+        paymentRef = FirebaseDatabase.getInstance().getReference("payments").child(uid);
+
+        paymentListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!isAdded()) return; // Kiểm tra fragment còn được attach không
+
                 historyList.clear();
                 for (DataSnapshot child : snapshot.getChildren()) {
                     PaymentHistoryItem item = child.getValue(PaymentHistoryItem.class);
                     if (item != null) historyList.add(item);
                 }
                 adapter.notifyDataSetChanged();
-                tvEmptyState.setVisibility(historyList.isEmpty() ? View.VISIBLE : View.GONE);
+                if (tvEmptyState != null) {
+                    tvEmptyState.setVisibility(historyList.isEmpty() ? View.VISIBLE : View.GONE);
+                }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Lỗi tải lịch sử thanh toán", Toast.LENGTH_SHORT).show();
+                if (isAdded() && getContext() != null) {
+                    Toast.makeText(getContext(), "Lỗi tải lịch sử thanh toán", Toast.LENGTH_SHORT).show();
+                }
             }
-        });
+        };
+
+        paymentRef.addValueEventListener(paymentListener);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (paymentRef != null && paymentListener != null) {
+            paymentRef.removeEventListener(paymentListener);
+        }
+        tvEmptyState = null;
+        rvHistory = null;
     }
 }

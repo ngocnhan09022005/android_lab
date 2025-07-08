@@ -48,10 +48,11 @@
     <ImageView
         android:id="@+id/btnMenu"
         android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:src="@android:drawable/ic_menu_more"
-        android:contentDescription="Menu sản phẩm"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:padding="8dp" />
+        android:contentDescription="Menu sản phẩm"
+        android:padding="8dp"
+        android:src="@drawable/ic_more_vert"
+        />
 
 </LinearLayout>

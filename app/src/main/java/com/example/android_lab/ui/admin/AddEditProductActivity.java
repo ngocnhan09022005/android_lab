@@ -24,7 +24,7 @@ public class AddEditProductActivity extends AppCompatActivity {
     private RadioButton rbFood, rbDrink;
     private Switch btnSwitch;
     private Button btnAdd, btnPickImage;
-    private ImageView imgPreview;
+    private ImageView imgPreview, imgBack;
     private Uri imageUri;
     private boolean isUploading = false;
     private Product editingProduct = null;
@@ -49,9 +49,11 @@ public class AddEditProductActivity extends AppCompatActivity {
             btnAdd.setOnClickListener(v -> addProduct());
         }
         btnPickImage.setOnClickListener(v -> ImageHelper.openGallery(imagePickerLauncher));
+        imgBack.setOnClickListener(v -> onBackPressed());
     }
 
     private void initViews() {
+        imgBack = findViewById(R.id.imgBackAdd);
         etName = findViewById(R.id.etProductName);
         etPrice = findViewById(R.id.etProductPrice);
         etDescription = findViewById(R.id.etProductDescription);

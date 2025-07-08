@@ -13,12 +13,12 @@
     <color name="background_dark">#121212</color>
 
     <color name="teal_700">#018786</color>
-
-    <color name="md_theme_light_primary">#4CAF50</color>
-
     <!-- Bottom navigation item tint -->
     <style name="Widget.App.BottomNavigation" parent="Widget.Material3.BottomNavigationView">
         <item name="itemIconTint">@color/bottom_nav_colors</item>
         <item name="itemTextColor">@color/bottom_nav_colors</item>
     </style>
+    <color name="md_theme_light_primary">#006D3B</color>
+    <color name="md_theme_light_background">#F8F8F8</color>
+
 </resources>

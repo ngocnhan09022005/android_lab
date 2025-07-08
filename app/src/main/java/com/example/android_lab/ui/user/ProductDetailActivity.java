@@ -1,5 +1,6 @@
 package com.example.android_lab.ui.user;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,12 +15,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class ProductDetailActivity extends AppCompatActivity {
 
     private ImageView imgProduct, imgBack;
-    private TextView tvName, tvPrice, tvDescription;
+    private TextView tvName, tvPrice, tvDescription ,btnAddToCart, btnBuyNow;
     private Product product;
 
     @Override
@@ -31,7 +33,8 @@ public class ProductDetailActivity extends AppCompatActivity {
         tvName = findViewById(R.id.tvFoodNameDetail);
         tvPrice = findViewById(R.id.tvFoodPriceDetail);
         tvDescription = findViewById(R.id.tvFoodDescriptionDetail);
-        TextView btnAddToCart = findViewById(R.id.btnAddToCartDetail);
+        btnAddToCart = findViewById(R.id.btnAddToCartDetail);
+        btnBuyNow = findViewById(R.id.btnBuyNow);
         imgBack = findViewById(R.id.imgBackDetail);
 
         product = (Product) getIntent().getSerializableExtra("product");
@@ -41,7 +44,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         }
 
         btnAddToCart.setOnClickListener(v -> addToCart());
-
+        btnBuyNow.setOnClickListener(v -> buyNow());
         imgBack.setOnClickListener(v -> onBackPressed());
     }
 
@@ -81,6 +84,26 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         }).addOnFailureListener(e ->
                 Toast.makeText(this, "Lỗi đọc giỏ hàng: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+    private void buyNow() {
+        if (product == null) return;
+
+        if (product.getQuantity() <= 0) {
+            product.setQuantity(1);
+        }
+
+        product.setType("product");
+
+        double total = product.getPrice() * product.getQuantity();
+
+        Intent intent = new Intent(this, ConfirmOrderActivity.class);
+        intent.putExtra("amount", total);
+
+        ArrayList<Product> singleItem = new ArrayList<>();
+        singleItem.add(product);
+        intent.putExtra("cartItems", singleItem);
+
+        startActivity(intent);
     }
 
 }
