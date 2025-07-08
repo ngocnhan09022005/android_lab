@@ -5,45 +5,19 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".ui.admin.AdminActivity">
 
-    <!-- Top Bar -->
-    <!-- Top Bar -->
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="0dp"
-        android:layout_height="44dp"
-        android:background="#EDE9E9"
-        android:orientation="horizontal"
-        android:gravity="end|center_vertical"
-        android:paddingEnd="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <Button
-            android:id="@+id/btnAdminLogout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Đăng xuất"
-            android:textSize="12sp"
-            android:padding="4dp"
-            android:backgroundTint="#D32F2F"
-            android:textColor="@android:color/white" />
-    </LinearLayout>
-
-
-    <!-- Fragment Container - ĐÂY LÀ CHỖ HIỂN THỊ FRAGMENT -->
+    <!-- Fragment Container -->
     <FrameLayout
         android:id="@+id/fragmentContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#FFFFFF"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/bottomMenu"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-    </FrameLayout>
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Bottom Navigation Menu -->
     <LinearLayout
@@ -62,7 +36,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <!-- Home Menu Item -->
+        <!-- Dashboard -->
         <LinearLayout
             android:id="@+id/menuHome"
             android:layout_width="0dp"
@@ -80,21 +54,12 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_home"
-                android:contentDescription="Home" />
-
-            <TextView
-                android:id="@+id/textHome"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Home"
-                android:textSize="12sp"
-                android:textColor="#666666"
-                android:layout_marginTop="4dp" />
+                android:contentDescription="Dashboard" />
         </LinearLayout>
 
-        <!-- Search Menu Item -->
+        <!-- Product CRUD -->
         <LinearLayout
-            android:id="@+id/menuSearch"
+            android:id="@+id/menuMenu"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -106,25 +71,16 @@
             android:background="?attr/selectableItemBackgroundBorderless">
 
             <ImageView
-                android:id="@+id/iconSearch"
+                android:id="@+id/iconMenu"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_search"
-                android:contentDescription="Search" />
-
-            <TextView
-                android:id="@+id/textSearch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Search"
-                android:textSize="12sp"
-                android:textColor="#666666"
-                android:layout_marginTop="4dp" />
+                android:src="@drawable/ic_menu"
+                android:contentDescription="Product Management" />
         </LinearLayout>
 
-        <!-- Favorites Menu Item -->
+        <!-- Payment History -->
         <LinearLayout
-            android:id="@+id/menuFavorites"
+            android:id="@+id/menuPaymentHistory"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -136,23 +92,14 @@
             android:background="?attr/selectableItemBackgroundBorderless">
 
             <ImageView
-                android:id="@+id/iconFavorites"
+                android:id="@+id/iconPaymentHistory"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_favorite"
-                android:contentDescription="Favorites" />
-
-            <TextView
-                android:id="@+id/textFavorites"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Favorites"
-                android:textSize="12sp"
-                android:textColor="#666666"
-                android:layout_marginTop="4dp" />
+                android:src="@drawable/ic_history"
+                android:contentDescription="Payment History" />
         </LinearLayout>
 
-        <!-- Profile Menu Item -->
+        <!-- Profile -->
         <LinearLayout
             android:id="@+id/menuProfile"
             android:layout_width="0dp"
@@ -171,15 +118,6 @@
                 android:layout_height="24dp"
                 android:src="@drawable/ic_account"
                 android:contentDescription="Profile" />
-
-            <TextView
-                android:id="@+id/textProfile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Profile"
-                android:textSize="12sp"
-                android:textColor="#666666"
-                android:layout_marginTop="4dp" />
         </LinearLayout>
 
     </LinearLayout>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+        <EditText android:id="@+id/etProductName"
+            android:hint="Tên sản phẩm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <EditText android:id="@+id/etProductPrice"
+            android:hint="Giá"
+            android:inputType="numberDecimal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <EditText android:id="@+id/etProductQuantity"
+            android:hint="Số lượng"
+            android:inputType="number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <EditText android:id="@+id/etProductDescription"
+            android:hint="Mô tả"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <RadioGroup android:id="@+id/rgType"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RadioButton android:id="@+id/rbFood" android:text="Food"  android:layout_height="wrap_content" android:layout_width="wrap_content"/>
+            <RadioButton android:id="@+id/rbDrink" android:text="Drink"  android:layout_height="wrap_content" android:layout_width="wrap_content"/>
+        </RadioGroup>
+        <Switch android:id="@+id/btnSwitch"
+            android:text="Popular?"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button android:id="@+id/btnPickImage"
+            android:text="Chọn ảnh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView android:id="@+id/imgPreview"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:visibility="gone"
+            android:scaleType="centerCrop"
+            android:layout_marginTop="8dp"/>
+        <Button android:id="@+id/btnAddProduct"
+            android:text="Thêm sản phẩm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" />
+    </LinearLayout>
+</ScrollView>

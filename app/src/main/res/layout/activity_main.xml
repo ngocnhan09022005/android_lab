@@ -46,36 +46,22 @@
                 android:layout_height="24dp"
                 android:contentDescription="@string/todo"
                 android:src="@drawable/ic_home" />
-            <TextView
-                android:id="@+id/textHome"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/home"
-                android:textSize="12sp"
-                android:layout_marginTop="4dp" />
         </LinearLayout>
 
-        <!-- Menu Search -->
+        <!-- Menu Menu (thay thế Search) -->
         <LinearLayout
-            android:id="@+id/menuSearch"
+            android:id="@+id/menuMenu"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
             <ImageView
-                android:id="@+id/iconSearch"
+                android:id="@+id/iconMenu"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:contentDescription="@string/todo"
-                android:src="@drawable/ic_search" />
-            <TextView
-                android:id="@+id/textSearch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/search"
-                android:textSize="12sp"
-                android:layout_marginTop="4dp" />
+                android:src="@drawable/ic_menu" />
         </LinearLayout>
 
         <!-- Menu Cart -->
@@ -91,35 +77,22 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_cart" />
-            <TextView
-                android:id="@+id/textCart"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cart"
-                android:textSize="12sp"
-                android:layout_marginTop="4dp" />
         </LinearLayout>
 
-        <!-- Menu Favorites -->
+        <!-- Menu Payment History -->
         <LinearLayout
-            android:id="@+id/menuFavorites"
+            android:id="@+id/menuPaymentHistory"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
             <ImageView
-                android:id="@+id/iconFavorites"
+                android:id="@+id/iconPaymentHistory"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_favorite" />
-            <TextView
-                android:id="@+id/textFavorites"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/favorites"
-                android:textSize="12sp"
-                android:layout_marginTop="4dp" />
+                android:src="@drawable/ic_history"
+                android:contentDescription="Lịch sử thanh toán" />
         </LinearLayout>
 
         <!-- Menu Profile -->
@@ -136,13 +109,6 @@
                 android:layout_height="24dp"
                 android:contentDescription="@string/todo"
                 android:src="@drawable/ic_account" />
-            <TextView
-                android:id="@+id/textProfile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/profile"
-                android:textSize="12sp"
-                android:layout_marginTop="4dp" />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -50,7 +50,7 @@ public class MenuProductActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView() {
-        productAdapter = new ProductAdapter(this, productList);
+        productAdapter = new ProductAdapter(this, productList, false); // isAdmin = false for user
         recyclerViewProduct.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewProduct.setAdapter(productAdapter);
     }

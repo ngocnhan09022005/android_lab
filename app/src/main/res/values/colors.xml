@@ -12,8 +12,7 @@
     <color name="background">#F5F5F5</color>
     <color name="background_dark">#121212</color>
 
-
-
+    <color name="teal_700">#018786</color>
 
     <color name="md_theme_light_primary">#4CAF50</color>
 

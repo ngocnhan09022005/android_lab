@@ -15,24 +15,22 @@ import androidx.activity.OnBackPressedCallback;
 import com.example.android_lab.R;
 import com.example.android_lab.ui.auth.LoginActivity;
 import com.example.android_lab.ui.user.fragments.CartFragment;
-import com.example.android_lab.ui.user.fragments.FavoritesFragment;
 import com.example.android_lab.ui.user.fragments.HomeFragment;
+import com.example.android_lab.ui.user.fragments.PaymentHistoryFragment;
 import com.example.android_lab.ui.user.fragments.ProfileFragment;
-import com.example.android_lab.ui.user.fragments.SearchFragment;
+import com.example.android_lab.ui.user.fragments.MenuFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
-    private LinearLayout menuHome, menuSearch, menuFavorites, menuProfile, menuCart;
-    private ImageView iconHome, iconSearch, iconFavorites, iconProfile, iconCart;
-    private TextView textHome, textSearch, textFavorites, textProfile, textCart;
-
+    private LinearLayout menuHome, menuMenu, menuProfile, menuCart, menuPaymentHistory;
+    private ImageView iconHome, iconMenu, iconProfile, iconCart, iconPaymentHistory;
     private HomeFragment homeFragment;
-    private SearchFragment searchFragment;
-    private FavoritesFragment favoritesFragment;
+    private MenuFragment menuFragment;
     private ProfileFragment profileFragment;
     private CartFragment cartFragment;
+    private PaymentHistoryFragment paymentHistoryFragment;
 
     private int currentMenuIndex = 0;
 
@@ -78,11 +76,11 @@ public class MainActivity extends AppCompatActivity {
                     Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
                     if (currentFragment instanceof HomeFragment) {
                         currentMenuIndex = 0;
-                    } else if (currentFragment instanceof SearchFragment) {
+                    } else if (currentFragment instanceof MenuFragment) {
                         currentMenuIndex = 1;
                     } else if (currentFragment instanceof CartFragment) {
                         currentMenuIndex = 2;
-                    } else if (currentFragment instanceof FavoritesFragment) {
+                    } else if (currentFragment instanceof PaymentHistoryFragment) {
                         currentMenuIndex = 3;
                     } else if (currentFragment instanceof ProfileFragment) {
                         currentMenuIndex = 4;
@@ -98,30 +96,24 @@ public class MainActivity extends AppCompatActivity {
 
     private void initViews() {
         menuHome = findViewById(R.id.menuHome);
-        menuSearch = findViewById(R.id.menuSearch);
-        menuFavorites = findViewById(R.id.menuFavorites);
+        menuMenu = findViewById(R.id.menuMenu);
         menuProfile = findViewById(R.id.menuProfile);
         menuCart = findViewById(R.id.menuCart);
+        menuPaymentHistory = findViewById(R.id.menuPaymentHistory);
 
         iconHome = findViewById(R.id.iconHome);
-        iconSearch = findViewById(R.id.iconSearch);
-        iconFavorites = findViewById(R.id.iconFavorites);
+        iconMenu = findViewById(R.id.iconMenu);
         iconProfile = findViewById(R.id.iconProfile);
         iconCart = findViewById(R.id.iconCart);
-
-        textHome = findViewById(R.id.textHome);
-        textSearch = findViewById(R.id.textSearch);
-        textFavorites = findViewById(R.id.textFavorites);
-        textProfile = findViewById(R.id.textProfile);
-        textCart = findViewById(R.id.textCart);
+        iconPaymentHistory = findViewById(R.id.iconPaymentHistory);
     }
 
     private void initFragments() {
         if (homeFragment == null) homeFragment = new HomeFragment();
-        if (searchFragment == null) searchFragment = new SearchFragment();
+        if (menuFragment == null) menuFragment = new MenuFragment();
         if (cartFragment == null) cartFragment = new CartFragment();
-        if (favoritesFragment == null) favoritesFragment = new FavoritesFragment();
         if (profileFragment == null) profileFragment = new ProfileFragment();
+        if (paymentHistoryFragment == null) paymentHistoryFragment = new PaymentHistoryFragment();
     }
 
     private void setupMenuClickListeners() {
@@ -131,29 +123,24 @@ public class MainActivity extends AppCompatActivity {
                 loadFragment(homeFragment, 0);
             }
         });
-
-        menuSearch.setOnClickListener(v -> {
+        menuMenu.setOnClickListener(v -> {
             if (currentMenuIndex != 1) {
                 updateMenuIcons(1);
-                loadFragment(searchFragment, 1);
+                loadFragment(menuFragment, 1);
             }
         });
-
         menuCart.setOnClickListener(v -> {
             if (currentMenuIndex != 2) {
                 updateMenuIcons(2);
                 loadFragment(cartFragment, 2);
             }
         });
-
-
-        menuFavorites.setOnClickListener(v -> {
+        menuPaymentHistory.setOnClickListener(v -> {
             if (currentMenuIndex != 3) {
                 updateMenuIcons(3);
-                loadFragment(favoritesFragment, 3);
+                loadFragment(paymentHistoryFragment, 3);
             }
         });
-
         menuProfile.setOnClickListener(v -> {
             if (currentMenuIndex != 4) {
                 updateMenuIcons(4);
@@ -165,58 +152,29 @@ public class MainActivity extends AppCompatActivity {
     private void updateMenuIcons(int selectedIndex) {
         // Reset tất cả
         iconHome.setImageResource(R.drawable.ic_home);
-        iconSearch.setImageResource(R.drawable.ic_search);
-        iconFavorites.setImageResource(R.drawable.ic_favorite);
+        iconMenu.setImageResource(R.drawable.ic_menu);
         iconProfile.setImageResource(R.drawable.ic_account);
         iconCart.setImageResource(R.drawable.ic_cart);
+        iconPaymentHistory.setImageResource(R.drawable.ic_history);
 
-        textHome.setTextColor(getColor(R.color.text_color_unselected));
-        textSearch.setTextColor(getColor(R.color.text_color_unselected));
-        textFavorites.setTextColor(getColor(R.color.text_color_unselected));
-        textProfile.setTextColor(getColor(R.color.text_color_unselected));
-        textCart.setTextColor(getColor(R.color.text_color_unselected));
-
-        // Reset height
-        textHome.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        textSearch.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        textFavorites.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        textProfile.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        textCart.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
 
         switch (selectedIndex) {
             case 0:
                 iconHome.setImageResource(R.drawable.ic_home_selected);
-                textHome.setTextColor(getColor(R.color.text_color_selected));
-                textHome.getLayoutParams().height = dpToPx(32);
                 break;
             case 1:
-                iconSearch.setImageResource(R.drawable.ic_search_selected);
-                textSearch.setTextColor(getColor(R.color.text_color_selected));
-                textSearch.getLayoutParams().height = dpToPx(32);
+                iconMenu.setImageResource(R.drawable.ic_menu_selected);
                 break;
             case 2:
                 iconCart.setImageResource(R.drawable.ic_cart_selected);
-                textCart.setTextColor(getColor(R.color.text_color_selected));
-                textCart.getLayoutParams().height = dpToPx(32);
                 break;
             case 3:
-                iconFavorites.setImageResource(R.drawable.ic_favorite_selected);
-                textFavorites.setTextColor(getColor(R.color.text_color_selected));
-                textFavorites.getLayoutParams().height = dpToPx(32);
+                iconPaymentHistory.setImageResource(R.drawable.ic_history_selected);
                 break;
             case 4:
                 iconProfile.setImageResource(R.drawable.ic_account_selected);
-                textProfile.setTextColor(getColor(R.color.text_color_selected));
-                textProfile.getLayoutParams().height = dpToPx(32);
                 break;
         }
-
-        // Áp dụng thay đổi
-        textHome.requestLayout();
-        textSearch.requestLayout();
-        textFavorites.requestLayout();
-        textProfile.requestLayout();
-        textCart.requestLayout();
 
         currentMenuIndex = selectedIndex;
     }
@@ -251,9 +209,5 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("currentMenuIndex", currentMenuIndex);
-    }
-
-    private int dpToPx(int dp) {
-        return (int) (dp * getResources().getDisplayMetrics().density);
     }
 }

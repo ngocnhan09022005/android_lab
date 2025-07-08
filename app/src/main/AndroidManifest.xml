@@ -78,7 +78,15 @@
             android:exported="false" />
         <activity android:name=".ui.user.PaymentResultActivity"
             android:exported="false"/>
+        <activity android:name=".ui.admin.AddEditProductActivity"
+            android:exported="false"/>
 
+        <activity android:name=".ui.user.ConfirmOrderActivity"
+            android:exported="false"/>
+        <activity android:name=".ui.user.OrderDetailActivity"
+            android:exported="false"/>
+        <activity android:name=".ui.user.PaymentSuccessActivity"
+            android:exported="false"/>
     </application>
 
 </manifest>

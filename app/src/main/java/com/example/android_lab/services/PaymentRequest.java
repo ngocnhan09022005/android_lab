@@ -5,7 +5,7 @@ public class PaymentRequest {
     private String orderId;
     private int amount;
     private String note;
-    private long expiredAt;
+    private final long expiredAt;
 
     public int getAmount() {
         return amount;

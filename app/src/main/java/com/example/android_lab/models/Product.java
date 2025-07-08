@@ -2,7 +2,7 @@ package com.example.android_lab.models;
 
 import java.io.Serializable;
 
-public class Product implements Serializable, CartItem {
+public class Product implements CartItem, java.io.Serializable {
     private String id;
     private String name;
     private double price;

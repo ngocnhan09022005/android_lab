@@ -15,7 +15,7 @@ import com.example.android_lab.R;
 import com.example.android_lab.models.CartItem;
 import com.example.android_lab.models.Product;
 import com.example.android_lab.ui.adapter.CartAdapter;
-import com.example.android_lab.ui.user.PaymentActivity;
+import com.example.android_lab.ui.user.ConfirmOrderActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.*;
 
@@ -44,9 +44,11 @@ public class CartFragment extends Fragment {
         rvCart.setAdapter(adapter);
         loadCartDataFirebase();
         btnProceed.setOnClickListener(v -> {
-            double total = calculateTotal(); // lấy từ giỏ hàng
-            Intent intent = new Intent(getContext(), PaymentActivity.class);
+            double total = calculateTotal();
+            Intent intent = new Intent(getContext(), ConfirmOrderActivity.class);
             intent.putExtra("amount", total);
+            // Truyền danh sách sản phẩm sang ConfirmOrderActivity
+            intent.putExtra("cartItems", new ArrayList<>(cartList));
             startActivity(intent);
         });
         return view;
