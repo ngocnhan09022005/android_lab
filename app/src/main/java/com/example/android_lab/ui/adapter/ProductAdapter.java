@@ -23,9 +23,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     private OnProductActionListener actionListener;
     private final boolean isAdmin;
 
-    public ProductAdapter(Context context, List<Product> productList) {
-        this(context, productList, true);
-    }
 
     public ProductAdapter(Context context, List<Product> productList, boolean isAdmin) {
         this.context = context;

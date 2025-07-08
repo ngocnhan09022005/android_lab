@@ -61,7 +61,6 @@
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <!-- Section Title -->
-            <!-- Section Title + 2 nút View Menu có ripple -->
             <LinearLayout
                 android:id="@+id/popularSection"
                 android:layout_width="0dp"
@@ -76,34 +75,16 @@
                 app:layout_constraintEnd_toEndOf="parent">
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:layout_weight="1"
                     android:text="@string/popular"
-                    android:textSize="20sp"
+                    android:textSize="24sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/black" />
 
                 <!-- Nút View Food -->
-                <FrameLayout
-                    android:id="@+id/btnViewMenuFood"
-                    android:layout_width="80dp"
-                    android:layout_height="25dp"
-                    android:layout_marginStart="8dp"
-                    android:background="@drawable/bg_ripple_rectangle"
-                    android:clickable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:focusable="true">
-
-                    <TextView
-                        android:id="@+id/tvViewMenuFood"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="@string/view_food"
-                        android:textAppearance="@style/view_menu"
-                        android:textColor="#000000" />
-                </FrameLayout>
             </LinearLayout>
 
 
@@ -128,7 +109,7 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:clipToPadding="false"
-                android:scrollbars="vertical"
+                android:scrollbars="horizontal"
                 app:layout_constraintTop_toBottomOf="@id/viewMenuContainer"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />

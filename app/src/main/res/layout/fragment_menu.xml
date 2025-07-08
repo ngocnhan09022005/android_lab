@@ -63,14 +63,14 @@
 
             <ToggleButton
                 android:id="@+id/btnFilterDrink"
-                android:layout_width="0dp"
+                android:layout_width="9dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginStart="8dp"
-                android:textOn="🥤 Drink"
-                android:textOff="🥤 Drink"
+                android:layout_weight="1"
                 android:background="@drawable/bg_toggle_filter"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                android:textOff="🥤 Drink"
+                android:textOn="🥤 Drink" />
         </LinearLayout>
 
         <!-- Tiêu đề -->

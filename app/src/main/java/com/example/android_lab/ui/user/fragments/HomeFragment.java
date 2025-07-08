@@ -1,6 +1,5 @@
 package com.example.android_lab.ui.user.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -8,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,7 +20,6 @@ import com.example.android_lab.R;
 import com.example.android_lab.models.Product;
 import com.example.android_lab.ui.adapter.BannerAdapter;
 import com.example.android_lab.ui.adapter.PopularProductAdapter;
-import com.example.android_lab.ui.user.MenuProductActivity;
 import com.google.firebase.database.*;
 
 import java.util.ArrayList;
@@ -39,7 +36,6 @@ public class HomeFragment extends Fragment {
     private DatabaseReference productRef;
     private Handler handler;
     private Runnable bannerRunnable;
-    private TextView viewMenuProduct;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,10 +48,6 @@ public class HomeFragment extends Fragment {
         setupBanner();
         setupRecyclerView();
         loadPopularProducts();
-
-        viewMenuProduct.setOnClickListener(v ->
-                startActivity(new Intent(requireContext(), MenuProductActivity.class)));
-
         return view;
     }
 
@@ -63,7 +55,6 @@ public class HomeFragment extends Fragment {
         bannerViewPager = view.findViewById(R.id.bannerViewPager);
         rvPopularProduct = view.findViewById(R.id.rvPopularProduct); // ID layout cũ có thể giữ nguyên
         progressBar = view.findViewById(R.id.progressBar);
-        viewMenuProduct = view.findViewById(R.id.tvViewMenuFood);
 
         productRef = FirebaseDatabase.getInstance().getReference("products");
         handler = new Handler(Looper.getMainLooper());

@@ -70,4 +70,13 @@
     <string name="motathucuong">Mô tả thức uống</string>
     <string name="thanhtoan">Thanh toán</string>
     <string name="default_web_client_id">298737128807-ofl7s3kcupb7f0tahl5ge1lro3e982l9.apps.googleusercontent.com</string>
+    <string name="t_n_s_n_ph_m">Tên sản phẩm</string>
+    <string name="gi">Giá</string>
+    <string name="s_luong">Số lượng</string>
+    <string name="m_t">Mô tả</string>
+    <string name="n">Đồ ăn</string>
+    <string name="th_c_u_ng">Thức uống</string>
+    <string name="ph_bi_n">Phổ biến?</string>
+    <string name="ch_n_nh">Chọn ảnh</string>
+    <string name="th_m_s_n_ph_m">Thêm sản phẩm</string>
 </resources>

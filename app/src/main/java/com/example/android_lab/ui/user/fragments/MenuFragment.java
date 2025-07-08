@@ -3,27 +3,19 @@ package com.example.android_lab.ui.user.fragments;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ToggleButton;
-import android.widget.Toast;
+import android.view.*;
+import android.widget.*;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.android_lab.R;
 import com.example.android_lab.models.Product;
 import com.example.android_lab.ui.adapter.ProductAdapter;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +25,7 @@ public class MenuFragment extends Fragment {
     private ImageButton btnSearch;
     private ToggleButton btnFilterFood, btnFilterDrink;
     private RecyclerView rvMenu;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private ProductAdapter productAdapter;
     private List<Product> allProducts;
     private List<Product> filteredProducts;
@@ -44,6 +37,7 @@ public class MenuFragment extends Fragment {
         initViews(view);
         setupRecyclerView();
         setupSearchAndFilter();
+        setupSwipeRefresh(); // <-- thêm vào
         return view;
     }
 
@@ -59,6 +53,7 @@ public class MenuFragment extends Fragment {
         btnFilterFood = view.findViewById(R.id.btnFilterFood);
         btnFilterDrink = view.findViewById(R.id.btnFilterDrink);
         rvMenu = view.findViewById(R.id.rvMenuFood);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefresh); // <-- thêm vào
         allProducts = new ArrayList<>();
         filteredProducts = new ArrayList<>();
         productsRef = FirebaseDatabase.getInstance().getReference("products");
@@ -70,7 +65,13 @@ public class MenuFragment extends Fragment {
         rvMenu.setAdapter(productAdapter);
     }
 
+    private void setupSwipeRefresh() {
+        swipeRefreshLayout.setOnRefreshListener(this::loadAllProducts);
+    }
+
     private void loadAllProducts() {
+        swipeRefreshLayout.setRefreshing(true); // Bắt đầu loading
+
         productsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -82,12 +83,14 @@ public class MenuFragment extends Fragment {
                         allProducts.add(product);
                     }
                 }
-                applyFilters(); // lọc lại theo toggle/search hiện tại
+                applyFilters(); // Lọc dữ liệu theo toggle/search hiện tại
+                swipeRefreshLayout.setRefreshing(false); // ✅ Dừng loading
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getContext(), "Lỗi tải sản phẩm", Toast.LENGTH_SHORT).show();
+                swipeRefreshLayout.setRefreshing(false); // ✅ Dừng loading nếu lỗi
             }
         });
     }

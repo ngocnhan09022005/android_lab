@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.android_lab.R;
 import com.example.android_lab.models.PaymentHistoryItem;
+import com.example.android_lab.utils.StatusMapper; // ✅ import thêm
 
 public class OrderDetailActivity extends AppCompatActivity {
     @Override
@@ -23,7 +25,10 @@ public class OrderDetailActivity extends AppCompatActivity {
         PaymentHistoryItem item = (PaymentHistoryItem) getIntent().getSerializableExtra("order");
         if (item != null) {
             tvOrderId.setText(item.getOrderId());
-            tvOrderStatus.setText(item.getStatus());
+
+            String statusVi = StatusMapper.toVietnamese(item.getStatus());
+            tvOrderStatus.setText(statusVi);
+
             tvOrderDate.setText(item.getDate());
             tvOrderTotal.setText(item.getTotal() + " đ");
             tvOrderContact.setText(item.getContactInfo());
