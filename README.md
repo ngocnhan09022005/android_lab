@@ -1,10 +1,14 @@
 # Tích hợp n8n Webhook + Retrofit để xử lý QR code thanh toán (Android Java)
 
-Tài liệu này cập nhật mục tiêu: Ứng dụng Android (Java) sẽ sử dụng Retrofit để gọi API Webhook do n8n cung cấp nhằm xử lý QR code thanh toán. Firebase vẫn dùng như hiện trạng (đã có `google-services.json`), và n8n được cấu hình dưới dạng Webhook.
+Tài liệu này cập nhật mục tiêu: Ứng dụng Android (Java) sẽ sử dụng Retrofit để gọi API Webhook do n8n cung cấp nhằm xử lý QR code thanh toán. Firebase vẫn dùng […]
+
+Điểm cập nhật quan trọng:
+- Không cần tự tạo/cấu hình workflow thủ công: repo đã có sẵn file “Myworkflow” để import.
+- Không bắt buộc cài n8n bằng Docker. Bạn có thể dùng n8n Cloud trên website n8n.io (không cần cài đặt máy chủ), rất phù hợp vì bài toán chỉ xử lý QR đơn giản.
 
 Mục lục
 - Tổng quan luồng xử lý
-- Thiết lập n8n Webhook cho QR thanh toán
+- Dùng workflow n8n có sẵn (Myworkflow) — n8n Cloud hoặc self-hosted
 - Hợp đồng API (request/response)
 - Tích hợp Retrofit trong Android app (Java)
 - Cấu hình base URL và HTTP (HTTP/HTTPS, emulator)
@@ -17,7 +21,7 @@ Mục lục
 ## 1) Tổng quan luồng xử lý
 
 1. Ứng dụng quét QR -> nhận được chuỗi QR (qrData) + thông tin đơn hàng (orderId, amount, currency).
-2. App gọi API Webhook n8n qua Retrofit: POST /webhook/payment/qr (hoặc /webhook-test/payment/qr trong chế độ test).
+2. App gọi API Webhook n8n qua Retrofit: POST tới URL Webhook (prod hoặc test).
 3. n8n:
    - Nhận payload từ Webhook.
    - Kiểm tra/chuẩn hóa dữ liệu (Function node).
@@ -27,9 +31,38 @@ Mục lục
 
 ---
 
-## 2) Thiết lập n8n Webhook cho QR thanh toán
+## 2) Dùng workflow n8n có sẵn (Myworkflow) — n8n Cloud hoặc self-hosted
 
-Yêu cầu: n8n đang chạy (local: http://localhost:5678). Có thể chạy bằng Docker:
+Bạn có 2 lựa chọn, trong đó n8n Cloud (n8n.io) là cách đơn giản nhất, không cần cài đặt:
+
+### 2.1) Khuyến nghị: n8n Cloud (không cần cài đặt/Docker)
+- Truy cập n8n.io, đăng ký/đăng nhập và vào không gian làm việc của bạn.
+- Chọn “Workflows” -> “Import from File”, rồi chọn file “Myworkflow” trong repo này để import.
+- Mở workflow vừa import, kiểm tra Webhook node:
+  - Method: POST
+  - Path: payment/qr
+  - Mode: Production (endpoint prod) hoặc Test (endpoint test)
+- Lưu (Save) và Activate workflow.
+- Sao chép Webhook URL hiển thị trong Webhook node:
+  - URL Test: dùng cho thử nghiệm (thường có “/webhook-test/…”)
+  - URL Production: dùng cho môi trường chạy thật (thường có “/webhook/…”)
+- Dùng chính URL này trong ứng dụng Android hoặc công cụ kiểm thử (curl/Postman).
+
+Kiểm thử nhanh (Cloud):
+```bash
+# Thay <CLOUD_WEBHOOK_TEST_URL> bằng URL Test copy từ node Webhook
+curl -X POST "<CLOUD_WEBHOOK_TEST_URL>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "qrData": "orderId=12345&amount=150000&note=demo",
+    "amount": 150000,
+    "currency": "VND",
+    "meta": {"source":"android-debug"}
+  }'
+```
+
+### 2.2) Tùy chọn: Self-hosted (local/dev)
+Bạn vẫn có thể chạy n8n local nếu muốn:
 ```bash
 docker run -it --rm \
   -p 5678:5678 \
@@ -37,81 +70,9 @@ docker run -it --rm \
   --name n8n \
   n8nio/n8n
 ```
-
-Các bước trong giao diện n8n:
-1. Tạo Workflow mới.
-2. Thêm node “Webhook”
-   - HTTP Method: POST
-   - Path: payment/qr
-   - Mode: Production (sử dụng endpoint /webhook/payment/qr). Trong quá trình dev, bạn có thể dùng “Test” với /webhook-test/payment/qr.
-   - Response: Keep the response for later node (sẽ dùng node Respond to Webhook).
-3. Thêm node “Function” để validate và chuẩn hóa đầu vào. Ví dụ code:
-   ```javascript
-   // Function Node: Validate & normalize QR payload
-   // Input: items[0].json = { qrData, amount, currency, orderId, meta }
-   // Output: normalized fields + pseudo processing
-   const item = items[0].json;
-
-   // Basic validation
-   if (!item.qrData || typeof item.qrData !== 'string') {
-     throw new Error('qrData is required and must be a string');
-   }
-   if (item.amount == null || isNaN(Number(item.amount))) {
-     throw new Error('amount is required and must be a number');
-   }
-
-   // Normalize currency
-   const currency = (item.currency || 'VND').toUpperCase();
-
-   // Example: parse QR (tuỳ theo format QR thực tế của bạn)
-   // Ở đây giả định qrData có thể là chuỗi chứa orderId=...&amount=...
-   // Nếu bạn có parser cụ thể, thay thế logic bên dưới.
-   const parsed = {};
-   try {
-     const pairs = item.qrData.split('&');
-     for (const p of pairs) {
-       const [k, v] = p.split('=');
-       if (k && v) parsed[k] = decodeURIComponent(v);
-     }
-   } catch (e) {
-     // fallback nếu qrData không ở dạng key=value
-   }
-
-   const orderId = item.orderId || parsed.orderId || `ORD-${Date.now()}`;
-
-   // Build normalized payload
-   const normalized = {
-     orderId,
-     amount: Number(item.amount),
-     currency,
-     qrRaw: item.qrData,
-     meta: item.meta || {},
-     processedAt: new Date().toISOString(),
-   };
-
-   return [{ json: normalized }];
-   ```
-4. (Tuỳ chọn) Thêm các node xử lý:
-   - HTTP Request: Gọi cổng thanh toán hoặc service backend của bạn để tạo giao dịch.
-   - Set/Function: Chuyển đổi dữ liệu về response chuẩn.
-   - Write Database/Google Sheets: Lưu log giao dịch.
-5. Thêm node “Respond to Webhook”
-   - Response Code: 200
-   - Response Data: “Last node output” hoặc thiết lập “JSON” và trả về trường mong muốn, ví dụ:
-     - Response Body: Expression `{{$json}}` nếu bạn muốn trả nguyên payload đã normalize
-     - Hoặc tạo một object custom: 
-       ```json
-       {
-         "status": "ok",
-         "message": "QR processed",
-         "orderId": "{{$json.orderId}}",
-         "amount": "{{$json.amount}}",
-         "currency": "{{$json.currency}}"
-       }
-       ```
-6. Lưu (Save) và Activate workflow.
-
-Kiểm thử nhanh (test mode):
+- Mở giao diện n8n local: http://localhost:5678
+- Import file “Myworkflow” -> Save -> Activate.
+- Test nhanh (test mode):
 ```bash
 curl -X POST http://localhost:5678/webhook-test/payment/qr \
   -H "Content-Type: application/json" \
@@ -123,12 +84,16 @@ curl -X POST http://localhost:5678/webhook-test/payment/qr \
   }'
 ```
 
+Ghi chú:
+- Với n8n Cloud, luôn dùng nguyên Webhook URL được hiển thị (copy từ Webhook node).
+- Với self-hosted, endpoint mặc định là:
+  - Test: http://<host>:5678/webhook-test/payment/qr
+  - Prod: http://<host>:5678/webhook/payment/qr
+
 ---
 
 ## 3) Hợp đồng API (contract)
 
-- Endpoint (dev test): POST http://localhost:5678/webhook-test/payment/qr
-- Endpoint (prod): POST http://<host>:5678/webhook/payment/qr
 - Headers: Content-Type: application/json
 - Request (ví dụ):
 ```json
@@ -173,12 +138,13 @@ dependencies {
 }
 ```
 
-Khai báo BASE URL:
-- Dùng BuildConfig (khuyến nghị cho debug/release):
+Có 2 cách sử dụng với Retrofit:
+
+- Cách A (self-hosted/local): Dùng BASE_URL + path cố định
 ```groovy
 android {
     defaultConfig {
-        // Dùng 10.0.2.2 cho emulator trỏ về localhost máy tính
+        // Emulator Android trỏ localhost máy tính qua 10.0.2.2
         buildConfigField "String", "N8N_BASE_URL", "\"http://10.0.2.2:5678/\""
     }
     buildTypes {
@@ -186,22 +152,63 @@ android {
             buildConfigField "String", "N8N_BASE_URL", "\"http://10.0.2.2:5678/\""
         }
         release {
-            // Sản xuất nên dùng HTTPS
+            // Sản xuất nên dùng HTTPS nếu self-hosted (đặt domain có TLS)
             buildConfigField "String", "N8N_BASE_URL", "\"https://your-n8n-domain/\""
-            // proguard/r8 rules cho Gson/Retrofit nếu cần
         }
     }
 }
 ```
+Interface:
+```java
+public interface N8nApi {
+    @POST("webhook/payment/qr")
+    Call<PaymentQrResponse> sendPaymentQr(@Body PaymentQrRequest body);
+}
+```
 
-Các file mã nguồn mẫu (sửa package cho phù hợp dự án của bạn):
+- Cách B (khuyến nghị cho n8n Cloud): Truyền full Webhook URL bằng @Url
+Ưu điểm: bạn copy nguyên URL từ Webhook node (Test/Prod) mà không cần cố định BASE_URL/path.
+```java
+public interface N8nApiDynamic {
+    @POST
+    Call<PaymentQrResponse> sendPaymentQr(@Url String webhookUrl, @Body PaymentQrRequest body);
+}
+```
+Sử dụng:
+```java
+// webhookUrl lấy từ Webhook node (Test hoặc Prod) trên n8n Cloud
+String webhookUrl = BuildConfig.N8N_WEBHOOK_URL; // hoặc Remote Config/Encrypted storage
+api.sendPaymentQr(webhookUrl, requestBody).enqueue(...);
+```
+Gợi ý buildConfig cho Cloud:
+```groovy
+android {
+    defaultConfig {
+        // Lưu ý: đây là FULL URL (https://.../webhook-test/payment/qr hoặc /webhook/...)
+        buildConfigField "String", "N8N_WEBHOOK_URL", "\"https://<your-cloud-webhook-url>\""
+    }
+}
+```
 
-- N8nApi.java: định nghĩa endpoint Retrofit
-- RetrofitClient.java: tạo Retrofit instance
-- PaymentQrRequest.java, PaymentQrResponse.java: model request/response
-- Ví dụ sử dụng: gọi API sau khi quét QR
+Models (ví dụ rút gọn):
+```java
+public class PaymentQrRequest {
+    public String qrData;
+    public Long amount;
+    public String currency;
+    public String orderId;
+    public Map<String, Object> meta;
+}
 
-Xem chi tiết file ở phía dưới (khối mã “file”).
+public class PaymentQrResponse {
+    public String status;
+    public String message;
+    public String orderId;
+    public Long amount;
+    public String currency;
+    public String processedAt;
+}
+```
 
 ---
 
@@ -210,16 +217,18 @@ Xem chi tiết file ở phía dưới (khối mã “file”).
 - Emulator Android truy cập “localhost” của máy tính qua IP đặc biệt: 10.0.2.2
 - Thiết bị thật: dùng IP LAN của máy tính (vd: http://192.168.1.10:5678)
 - Android 9+ chặn cleartext HTTP theo mặc định:
-  - Trong giai đoạn dev, có thể bật cleartext cho host nội bộ bằng networkSecurityConfig (file mẫu bên dưới).
-  - Sản xuất: Bắt buộc dùng HTTPS cho n8n (reverse proxy qua Nginx/Caddy + TLS).
+  - Dev: có thể bật cleartext cho host nội bộ bằng networkSecurityConfig.
+  - Prod: Bắt buộc dùng HTTPS (n8n Cloud đã có sẵn HTTPS).
 
 ---
 
 ## 6) Build & chạy nhanh
 
 - Mở dự án với Android Studio, sync Gradle.
-- Chạy n8n local, import workflow hoặc tạo theo hướng dẫn trên, Activate.
-- Run app (chọn thiết bị/emulator) và thực hiện quét QR -> app gọi n8n webhook qua Retrofit.
+- Chọn 1 trong 2:
+  - n8n Cloud: Import “Myworkflow”, Activate, copy Webhook URL và dùng trực tiếp trong app/curl.
+  - Self-hosted: Chạy n8n local (tùy chọn), import “Myworkflow”, dùng endpoint local.
+- Run app -> quét QR -> app gọi Webhook n8n qua Retrofit.
 
 ---
 
@@ -234,7 +243,7 @@ Chỉ sử dụng cho môi trường dev/test. Không công khai trên sản xu�
 
 ## 8) Ghi chú bảo mật và kiểm thử
 
-- Dùng HTTPS và secret key/Basic Auth/JWT trên Webhook nếu public internet.
-- Hạn chế IP hoặc đặt Reverse Proxy với rate limit.
+- Với môi trường public, dùng HTTPS và bổ sung cơ chế bảo vệ Webhook (secret key/Basic Auth/JWT).
+- Hạn chế IP hoặc đặt Reverse Proxy với rate limit (self-hosted).
 - Không log thông tin nhạy cảm (thẻ, mã bí mật) trong n8n hoặc app.
 - Kiểm thử bằng curl/Postman trước khi tích hợp app để xác thực hợp đồng API.
